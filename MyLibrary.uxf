@@ -419,7 +419,8 @@ bg=blue</panel_attributes>
     </coordinates>
     <panel_attributes>ApplicationUser
 --
-+ friends: ICollection&lt;ApplicationUser&gt;</panel_attributes>
++ friends: ICollection&lt;ApplicationUser&gt;
++ listsArePublic: boolean</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -511,7 +512,7 @@ bg=blue</panel_attributes>
       <w>60</w>
       <h>15</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
   </element>
   <element>

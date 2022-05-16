@@ -77,6 +77,7 @@ public class TestFilmController
 
         // Then
         Assert.Equal("Private", viewResult.ViewName);
+        Dispose();
     }
 
     [Fact]
@@ -93,6 +94,7 @@ public class TestFilmController
 
         // Then
         Assert.Equal("Index", viewResult.ViewName);
+        Dispose();
     }
 
     [Fact]
@@ -108,6 +110,7 @@ public class TestFilmController
 
         // Then
         Assert.Equal("Login", viewResult.ActionName);
+        Dispose();
     }
 
     [Fact]
@@ -124,5 +127,6 @@ public class TestFilmController
 
         // Then
         Assert.Equal("Index", viewResult.ViewName);
+        Dispose();
     }
 }

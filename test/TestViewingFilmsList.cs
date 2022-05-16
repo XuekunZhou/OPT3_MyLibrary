@@ -2,7 +2,7 @@ using Xunit;
 
 namespace test;
 
-public class Mod_Condition_Decision
+public class TestViewwingFilmsList
 {
     // A: list is public
     // B: UserOne is friends with UserTwo

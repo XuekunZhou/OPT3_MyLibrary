@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220516135558_InitialMigration")]
+    [Migration("20220516174608_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -453,7 +453,7 @@ namespace MyLibrary.Migrations
             modelBuilder.Entity("Models.EpisodeEntryModel", b =>
                 {
                     b.HasOne("Models.SeriesEntryModel", "MyProperty")
-                        .WithMany()
+                        .WithMany("Episodes")
                         .HasForeignKey("MyPropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -518,6 +518,11 @@ namespace MyLibrary.Migrations
                     b.HasOne("Models.ApplicationUser", null)
                         .WithMany("Friends")
                         .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("Models.SeriesEntryModel", b =>
+                {
+                    b.Navigation("Episodes");
                 });
 
             modelBuilder.Entity("Models.ApplicationUser", b =>

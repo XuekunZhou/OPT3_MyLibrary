@@ -19,11 +19,23 @@ namespace MyLibrary.Controllers
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
             OverviewViewModel? model = null;
+            ViewData["Warning"] = "";
 
             if (loggedInUser != null)
             {
                 model = new OverviewViewModel(_context, loggedInUser, 7);
+
+                if (model.TimeSpentOnFilmsInMinutes >= 1320)
+                {
+                    ViewData["Warning"] = "You REALLY should spent less time on this";
+                }
+                else if (model.TimeSpentOnFilmsInMinutes >= 850)
+                {
+                    ViewData["Warning"] = "You should spent less time on this";
+                }
             }
+
+            
 
             return View(model);
         }

@@ -31,7 +31,7 @@ namespace test
 
         private void Setup()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("TestOverviewViewModel").Options;
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("TestHomeController").Options;
             context = new ApplicationDbContext(options);
             context.Database.EnsureCreated();
 

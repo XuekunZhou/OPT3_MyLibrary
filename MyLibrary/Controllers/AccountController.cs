@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Models;
+using MyLibrary.Models;
 
-namespace Controllers
+namespace MyLibrary.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,29 +24,66 @@ namespace Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
-        public IActionResult Register(RegisterViewModel model)
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAsync(RegisterViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser(model.Email, model.Username);
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, true);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return View(model);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
-        public IActionResult Login(LoginViewModel model)
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginAsync(LoginViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+
+                if (user != null)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+            }
+            ViewData["LoginError"] = "Incorrect email or password";
+            return View(model);
         }
 
-        public IActionResult Logout()
+        [HttpGet]
+        public async Task<IActionResult> LogoutAsync()
         {
-            return View();
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
         
         

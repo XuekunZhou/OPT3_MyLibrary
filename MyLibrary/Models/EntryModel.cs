@@ -1,7 +1,7 @@
 #nullable disable
 using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace MyLibrary.Models
 {
     public class EntryModel
     {

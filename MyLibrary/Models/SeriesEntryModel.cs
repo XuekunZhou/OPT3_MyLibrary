@@ -1,4 +1,4 @@
-namespace Models
+namespace MyLibrary.Models
 {
     public class SeriesEntryModel: EntryModel
     {

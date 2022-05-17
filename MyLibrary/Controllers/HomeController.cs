@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyLibrary.Models;
 
-namespace Controllers
+namespace MyLibrary.Controllers
 {
     public class HomeController : Controller
     {

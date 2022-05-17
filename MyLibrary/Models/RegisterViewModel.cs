@@ -1,13 +1,17 @@
 #nullable disable
 using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace MyLibrary.Models
 {
     public class RegisterViewModel
     {
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [Required]
+        [MaxLength(16)]
+        public string Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

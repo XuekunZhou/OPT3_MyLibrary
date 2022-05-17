@@ -78,9 +78,10 @@ namespace MyLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                filmEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(filmEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List", new {id = _userManager.GetUserId(User)});
             }
             return View(filmEntryModel);
         }

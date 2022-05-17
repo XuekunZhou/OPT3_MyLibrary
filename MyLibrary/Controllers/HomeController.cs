@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyLibrary.Models;
 
@@ -6,13 +7,25 @@ namespace MyLibrary.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            OverviewViewModel? model = null;
+
+            if (loggedInUser != null)
+            {
+                model = new OverviewViewModel(_context, loggedInUser, 7);
+            }
+
+            return View(model);
         }
 
         public IActionResult Privacy()

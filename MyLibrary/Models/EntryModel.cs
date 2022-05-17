@@ -1,3 +1,4 @@
+#nullable disable
 using System.ComponentModel.DataAnnotations;
 
 namespace Models
@@ -6,7 +7,7 @@ namespace Models
     {
         [Key]
         public int Id { get; set; }
-        public String? Title { get; set; }
+        public String Title { get; set; }
 
         [Range(0, 10)]
         public int ScoreOutOfTen { get; set; }

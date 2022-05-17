@@ -1,3 +1,4 @@
+#nullable disable
 using System.ComponentModel.DataAnnotations;
 
 namespace Models
@@ -7,6 +8,6 @@ namespace Models
         [Range(0, int.MaxValue)]
         public int LengthInMin { get; set; }
 
-        public SeriesEntryModel MyProperty { get; set; }
+        public SeriesEntryModel Series { get; set; }
     }
 }

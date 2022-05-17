@@ -4,9 +4,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
+using MyLibrary.Models;
 using Moq;
 using Xunit;
+using MyLibrary.Controllers;
+using System.Threading.Tasks;
 
 namespace test;
 
@@ -23,7 +25,7 @@ public class TestFilmController
 
     private void Setup()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("TestAanmelding").Options;
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("TestFilmController").Options;
         context = new ApplicationDbContext(options);
         context.Database.EnsureCreated();
 
@@ -49,30 +51,30 @@ public class TestFilmController
         context.SaveChanges();
     }
 
-        private void Dispose()
+    private void Dispose()
     {
-
         context.Database.EnsureDeleted();
     }
 
-    private Mock<UserManager<ApplicationUser>> GetMockUserManager(ApplicationUser loggedInUser)
+    private Mock<UserManager<ApplicationUser>> GetMockUserManager(ApplicationUser loggedInUser, ApplicationUser wachtedUser)
     {
         var mgr = new Mock<UserManager<ApplicationUser>>(Mock.Of<IUserStore<ApplicationUser>>(), null, null, null, null, null, null, null, null);;
         mgr.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(loggedInUser);    
+        mgr.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(wachtedUser);
 
         return mgr;
     }
 
     [Fact]
-    public async void Test_NotA_NotB_C_Results_False()
+    public async Task Test_NotA_NotB_C_Results_FalseAsync()
     {
         // Given
         Setup();
-        var mgr = GetMockUserManager(alice);
+        var mgr = GetMockUserManager(alice, carol);
         var sut = new FilmController(context, mgr.Object);
-    
+
         // When
-        var res = await sut.Index(carol.Id);
+        var res = await sut.ListAsync(carol.Id);
         var viewResult = Assert.IsType<ViewResult>(res);
 
         // Then
@@ -81,31 +83,32 @@ public class TestFilmController
     }
 
     [Fact]
-    public void Test_NotA_B_C_Results_True()
+    public async Task Test_NotA_B_C_Results_TrueAsync()
     {
         // Given
         Setup();
-        var mgr = GetMockUserManager(alice);
+        var mgr = GetMockUserManager(alice, bob);
         var sut = new FilmController(context, mgr.Object);
-    
+
         // When
-        var res = await sut.Index(bob.Id);
+        var res = await sut.ListAsync(bob.Id);
         var viewResult = Assert.IsType<ViewResult>(res);
 
         // Then
-        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Equal("List", viewResult.ViewName);
         Dispose();
     }
 
     [Fact]
-    public void Test_NotA_B_NotC_Results_False()
+    public async Task Test_NotA_B_NotC_Results_FalseAsync()
     {
         // Given
         Setup();
-        var sut = new FilmController(context);
-    
+        var mgr = GetMockUserManager(null, carol);
+        var sut = new FilmController(context, mgr.Object);
+
         // When
-        var res = await sut.Index(carol.Id);
+        var res = await sut.ListAsync(carol.Id);
         var viewResult = Assert.IsType<RedirectToActionResult>(res);
 
         // Then
@@ -114,19 +117,19 @@ public class TestFilmController
     }
 
     [Fact]
-    public void Test_A_NotB_C_Results_True()
+    public async Task Test_A_NotB_C_Results_TrueAsync()
     {
         // Given
         Setup();
-        var mgr = GetMockUserManager(carol);
+        var mgr = GetMockUserManager(carol, bob);
         var sut = new FilmController(context, mgr.Object);
-    
+
         // When
-        var res = await sut.Index(bob.Id);
+        var res = await sut.ListAsync(bob.Id);
         var viewResult = Assert.IsType<ViewResult>(res);
 
         // Then
-        Assert.Equal("Index", viewResult.ViewName);
+        Assert.Equal("List", viewResult.ViewName);
         Dispose();
     }
 }

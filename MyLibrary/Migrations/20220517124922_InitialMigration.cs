@@ -28,8 +28,7 @@ namespace MyLibrary.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Discriminator = table.Column<string>(type: "TEXT", nullable: false),
-                    listsArePublic = table.Column<bool>(type: "INTEGER", nullable: true),
+                    listsArePublic = table.Column<bool>(type: "INTEGER", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -102,8 +101,8 @@ namespace MyLibrary.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
@@ -147,8 +146,8 @@ namespace MyLibrary.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -210,23 +209,24 @@ namespace MyLibrary.Migrations
                 name: "Friends",
                 columns: table => new
                 {
-                    UserOneId = table.Column<string>(type: "TEXT", nullable: false),
-                    UserTwoId = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserOneId = table.Column<string>(type: "TEXT", nullable: true),
+                    UserTwoId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_Friends", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Friends_AspNetUsers_UserOneId",
                         column: x => x.UserOneId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Friends_AspNetUsers_UserTwoId",
                         column: x => x.UserTwoId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -279,7 +279,7 @@ namespace MyLibrary.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     LengthInMin = table.Column<int>(type: "INTEGER", nullable: false),
-                    MyPropertyId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SeriesId = table.Column<int>(type: "INTEGER", nullable: true),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     ScoreOutOfTen = table.Column<int>(type: "INTEGER", nullable: false),
                     DateOfEntry = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -294,11 +294,10 @@ namespace MyLibrary.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_EpisodeEntries_SeriesEntries_MyPropertyId",
-                        column: x => x.MyPropertyId,
+                        name: "FK_EpisodeEntries_SeriesEntries_SeriesId",
+                        column: x => x.SeriesId,
                         principalTable: "SeriesEntries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -349,9 +348,9 @@ namespace MyLibrary.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EpisodeEntries_MyPropertyId",
+                name: "IX_EpisodeEntries_SeriesId",
                 table: "EpisodeEntries",
-                column: "MyPropertyId");
+                column: "SeriesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EpisodeEntries_UserId",

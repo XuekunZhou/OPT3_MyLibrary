@@ -65,7 +65,90 @@ namespace MyLibrary.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("MyLibrary.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -73,12 +156,11 @@ namespace MyLibrary.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
+                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -121,7 +203,12 @@ namespace MyLibrary.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("listsArePublic")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -131,90 +218,9 @@ namespace MyLibrary.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Models.BookEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.BookEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -242,7 +248,7 @@ namespace MyLibrary.Migrations
                     b.ToTable("BookEntries");
                 });
 
-            modelBuilder.Entity("Models.EpisodeEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.EpisodeEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -254,10 +260,10 @@ namespace MyLibrary.Migrations
                     b.Property<int>("LengthInMin")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MyPropertyId")
+                    b.Property<int>("ScoreOutOfTen")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ScoreOutOfTen")
+                    b.Property<int?>("SeriesId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
@@ -268,14 +274,14 @@ namespace MyLibrary.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MyPropertyId");
+                    b.HasIndex("SeriesId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("EpisodeEntries");
                 });
 
-            modelBuilder.Entity("Models.FilmEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.FilmEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -303,15 +309,19 @@ namespace MyLibrary.Migrations
                     b.ToTable("FilmEntries");
                 });
 
-            modelBuilder.Entity("Models.Friend", b =>
+            modelBuilder.Entity("MyLibrary.Models.Friend", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("UserOneId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserTwoId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("UserOneId");
 
@@ -320,7 +330,7 @@ namespace MyLibrary.Migrations
                     b.ToTable("Friends");
                 });
 
-            modelBuilder.Entity("Models.GameEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.GameEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -348,7 +358,7 @@ namespace MyLibrary.Migrations
                     b.ToTable("GameEntries");
                 });
 
-            modelBuilder.Entity("Models.SeriesEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.SeriesEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -373,21 +383,6 @@ namespace MyLibrary.Migrations
                     b.ToTable("SeriesEntries");
                 });
 
-            modelBuilder.Entity("Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("listsArePublic")
-                        .HasColumnType("INTEGER");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -399,7 +394,7 @@ namespace MyLibrary.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("MyLibrary.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -408,7 +403,7 @@ namespace MyLibrary.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("MyLibrary.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -423,7 +418,7 @@ namespace MyLibrary.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("MyLibrary.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -432,100 +427,94 @@ namespace MyLibrary.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("MyLibrary.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Models.BookEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("Models.ApplicationUser", "User")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", null)
+                        .WithMany("Friends")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("MyLibrary.Models.BookEntryModel", b =>
+                {
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.EpisodeEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.EpisodeEntryModel", b =>
                 {
-                    b.HasOne("Models.SeriesEntryModel", "MyProperty")
+                    b.HasOne("MyLibrary.Models.SeriesEntryModel", "Series")
                         .WithMany("Episodes")
-                        .HasForeignKey("MyPropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SeriesId");
 
-                    b.HasOne("Models.ApplicationUser", "User")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("MyProperty");
+                    b.Navigation("Series");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.FilmEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.FilmEntryModel", b =>
                 {
-                    b.HasOne("Models.ApplicationUser", "User")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.Friend", b =>
+            modelBuilder.Entity("MyLibrary.Models.Friend", b =>
                 {
-                    b.HasOne("Models.ApplicationUser", "UserOne")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "UserOne")
                         .WithMany()
-                        .HasForeignKey("UserOneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserOneId");
 
-                    b.HasOne("Models.ApplicationUser", "UserTwo")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "UserTwo")
                         .WithMany()
-                        .HasForeignKey("UserTwoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserTwoId");
 
                     b.Navigation("UserOne");
 
                     b.Navigation("UserTwo");
                 });
 
-            modelBuilder.Entity("Models.GameEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.GameEntryModel", b =>
                 {
-                    b.HasOne("Models.ApplicationUser", "User")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.SeriesEntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.SeriesEntryModel", b =>
                 {
-                    b.HasOne("Models.ApplicationUser", "User")
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Models.ApplicationUser", b =>
-                {
-                    b.HasOne("Models.ApplicationUser", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("Models.SeriesEntryModel", b =>
-                {
-                    b.Navigation("Episodes");
-                });
-
-            modelBuilder.Entity("Models.ApplicationUser", b =>
+            modelBuilder.Entity("MyLibrary.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Friends");
+                });
+
+            modelBuilder.Entity("MyLibrary.Models.SeriesEntryModel", b =>
+                {
+                    b.Navigation("Episodes");
                 });
 #pragma warning restore 612, 618
         }

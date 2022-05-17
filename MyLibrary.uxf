@@ -199,12 +199,12 @@ Updates View</panel_attributes>
     <coordinates>
       <x>240</x>
       <y>576</y>
-      <w>320</w>
+      <w>344</w>
       <h>152</h>
     </coordinates>
     <panel_attributes>SeriesController
 --
-+ Index(userId: int, page: int, search: String, sort: int): IActionResult
++ Index(id: string, page: int, search: String, sort: int): IActionResult
 + Create(): IActionResult
 + Create(model: SeriesViewModel): IActionResult
 + Update(id: int): IActionResult
@@ -415,13 +415,15 @@ bg=blue</panel_attributes>
     <coordinates>
       <x>1472</x>
       <y>480</y>
-      <w>216</w>
+      <w>256</w>
       <h>152</h>
     </coordinates>
     <panel_attributes>ApplicationUser
 --
 + friends: ICollection&lt;ApplicationUser&gt;
-+ listsArePublic: boolean</panel_attributes>
++ listsArePublic: boolean
+--
++ IsFriendsWith(user: ApplicationUser): boolean</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -443,7 +445,7 @@ bg=blue</panel_attributes>
     <coordinates>
       <x>1568</x>
       <y>824</y>
-      <w>304</w>
+      <w>320</w>
       <h>152</h>
     </coordinates>
     <panel_attributes>AccountController
@@ -508,13 +510,13 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1680</x>
+      <x>1720</x>
       <y>552</y>
-      <w>96</w>
+      <w>56</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>

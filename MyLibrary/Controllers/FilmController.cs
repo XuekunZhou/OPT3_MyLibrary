@@ -34,9 +34,11 @@ namespace MyLibrary.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+
             
-            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+            if ((id != null) && (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser)))
             {
+                ViewData["Title"] = watchedUser.UserName + "'s list";
                 return View("List", films);
             }
 

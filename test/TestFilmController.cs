@@ -1,3 +1,4 @@
+#nullable disable
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -18,10 +19,10 @@ public class TestFilmController
     // B: UserOne is friends with UserTwo
     // C: UserOne is logged in
 
-    private ApplicationDbContext? context;
-    private ApplicationUser? alice;
-    private ApplicationUser? bob;
-    private ApplicationUser? carol;
+    private ApplicationDbContext context;
+    private ApplicationUser alice;
+    private ApplicationUser bob;
+    private ApplicationUser carol;
 
     private void Setup()
     {

@@ -135,5 +135,24 @@ namespace test
             Assert.Equal(1000000, sut.TimeSpentOnFilmsInMinutes);
             Dispose();
         }
+
+        [Fact]
+        public void TestOldEntries()
+        {
+            // Given
+            Setup();
+            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "b", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "c", LengthInMinutes = 100, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
+            
+            context.SaveChanges();
+            
+            // When
+            var sut = new OverviewViewModel(context, alice, 7);
+
+            // Then
+            Assert.Equal(200, sut.TimeSpentOnFilmsInMinutes);
+            Dispose();
+        }
     }
 }

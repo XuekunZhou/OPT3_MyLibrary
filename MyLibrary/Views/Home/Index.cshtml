@@ -9,21 +9,12 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if (signInManager.IsSignedIn(User))
-{
-    var loggedInUser = await userManager.GetUserAsync(User);
-
-    <h1>Welcome back @loggedInUser.UserName!</h1>
-    <p>Time spent on Films: @Model.TimeSpentOnFilmsInMinutes</p>
-}
-else
-{
-    <div class="card text-center">
-        <div class="card-body">
-            <h1 class="card-title">Welcome to MyLibrary!</h1>
-            <p class="card-text">MyLibrary is a webbapp that lets you keep track on films you've seen, books you've read and much more bla bla bla bla bla bla bla bla bla bla bla...</p>
-            <a asp-controller="Account" asp-action="Register" asp class="btn btn-primary">Register</a>
-            <a asp-controller="Account" asp-action="Login" class="btn btn-secondary">Login</a>
-        </div>
+<div class="card text-center">
+    <div class="card-body">
+        <h1 class="card-title">Welcome to MyLibrary!</h1>
+        <p class="card-text">MyLibrary is a webbapp that lets you keep track on films you've seen, books you've read and much more bla bla bla bla bla bla bla bla bla bla bla...</p>
+        <a asp-controller="Account" asp-action="Register" asp class="btn btn-primary">Register</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-secondary">Login</a>
     </div>
-}
+</div>
+

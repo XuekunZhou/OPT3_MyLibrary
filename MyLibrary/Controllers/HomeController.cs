@@ -35,8 +35,6 @@ namespace MyLibrary.Controllers
                 }
             }
 
-            
-
             return View(model);
         }
 

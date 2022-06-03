@@ -1,0 +1,13 @@
+@model ApplicationUser
+
+@if (@Model.listsArePublic)
+{
+    <p>Your lists are currently: <span class="fw-bold">Public</span></p>
+    <p>Set list to <a class="btn btn-primary" asp-action="SetPrivate" asp-controller="Account">Private</a></p>
+}
+else 
+{
+    <p>Your lists are currently: <span class="fw-bold">Private</span></p>
+    <p>Set list to <a class="btn btn-primary" asp-action="SetPublic" asp-controller="Account">Public</a></p>
+
+}

@@ -19,9 +19,9 @@ namespace MyLibrary.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _userManager.GetUserAsync(User));
         }
 
         [HttpGet]
@@ -84,6 +84,24 @@ namespace MyLibrary.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> SetPrivate()
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            loggedInUser.listsArePublic = false;
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Account");
+        }
+
+        public async Task<IActionResult> SetPublic()
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            loggedInUser.listsArePublic = true;
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Account");
         }
         
         

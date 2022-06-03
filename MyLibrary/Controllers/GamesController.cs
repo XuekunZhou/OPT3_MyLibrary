@@ -29,21 +29,24 @@ namespace MyLibrary.Controllers
             var loggedInUser = await _userManager.GetUserAsync(User);
             var watchedUser = await _userManager.FindByIdAsync(id);
 
+            if (id == null)
+            {
+                watchedUser = loggedInUser;
+            }
+
             if (watchedUser == null) 
             {
-                return RedirectToAction("Error", "NotFound");
+                return RedirectToAction("NotFound", "Error");
             }
-            else 
-            {
-                if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
-                {
-                    var games = _context.GameEntries.Where(e => e.User == watchedUser).ToList();
-                    ViewData["Title"] = watchedUser.UserName + "'s games";
-                    return View("List", games);
-                }
 
-                return RedirectToAction("Error", "Private");
+            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+            {
+                var games = _context.GameEntries.Where(e => e.User == watchedUser).ToList();
+                ViewData["Title"] = watchedUser.UserName + "'s games";
+                return View(games);
             }
+
+            return RedirectToAction("Private", "Error");
         }
 
         // GET: Games/Details/5
@@ -82,7 +85,7 @@ namespace MyLibrary.Controllers
                 gameEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(gameEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
             return View(gameEntryModel);
         }

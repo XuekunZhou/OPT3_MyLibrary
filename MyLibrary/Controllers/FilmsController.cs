@@ -32,24 +32,27 @@ namespace MyLibrary.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            
+
             var watchedUser = await _userManager.FindByIdAsync(id);
+
+            if (id == null) 
+            {
+                watchedUser = loggedInUser;
+            }
 
             if (watchedUser == null) 
             {
-                return RedirectToAction("Error", "NotFound");
+                return RedirectToAction("NotFound", "Error");
             }
-            else 
-            {
-                if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+
+            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
                 {
                     var films = _context.FilmEntries.Where(e => e.User == watchedUser).ToList();
                     ViewData["Title"] = watchedUser.UserName + "'s films";
                     return View("List", films);
                 }
 
-                return RedirectToAction("Error", "Private");
-            }
+            return RedirectToAction("Private", "Error");
         }
 
         // GET: Film/Details/5
@@ -139,7 +142,7 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
             return View(filmEntryModel);
         }
@@ -178,7 +181,7 @@ namespace MyLibrary.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ListAsync));
+            return RedirectToAction("List");
         }
 
         private bool FilmEntryModelExists(int id)

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyLibrary.Models
 {
-    public class EpisodeEntryModel
+    public class EpisodeModel
     {
         [Key]
         public int Id { get; set; }

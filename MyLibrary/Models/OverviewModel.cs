@@ -23,7 +23,7 @@ namespace MyLibrary.Models
         protected void SetEpisodesWatchedOfSeries(int days)
         {
             var date = DateTime.Now.AddDays(-days);
-            var totalEpisodes = _context.EpisodeEntries.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Count();
+            var totalEpisodes = _context.Episodes.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Count();
             EpisodesWatchedOfSeries = totalEpisodes;
         }
 

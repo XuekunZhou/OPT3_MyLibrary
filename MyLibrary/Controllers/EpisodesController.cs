@@ -25,27 +25,42 @@ namespace MyLibrary.Controllers
 
         public async Task<IActionResult> AddEpisode(int id)
         {
-            var model = new EpisodeEntryModel
+            var series = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault();
+
+            if (series != null)
             {
-                DateOfEntry = DateTime.UtcNow,
-                Series = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault(),
-                User = await _userManager.GetUserAsync(User)
-            };
+                var episode = new EpisodeModel
+                {
+                    DateOfEntry = DateTime.UtcNow,
+                    Series = series,
+                    User = await _userManager.GetUserAsync(User)
+                };
 
-            _context.Add(model);
-            await _context.SaveChangesAsync();
+                _context.Add(episode);
+                series.Size++;
+                _context.SaveChanges();
+            }
 
-            return RedirectToAction("Series", "List");
+            return RedirectToAction("List", "Series");
         }
 
-        public async Task<IActionResult> RemoveEpisode(int id)
+        public IActionResult RemoveEpisode(int id)
         {
-            var episode = _context.EpisodeEntries.Where(s => s.Series.Id == id).OrderBy(e => e.Id).LastOrDefault();
+            var series = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault();
+            if (series != null)
+            {
+                var episode = _context.Episodes.Where(e => e.Series == series).FirstOrDefault();
 
-            _context.Remove(episode);
-            await _context.SaveChangesAsync();
-            
-            return RedirectToAction("Series", "List");
+                if (episode != null)
+                {
+                    _context.Remove(episode);
+                    series.Size--;
+                    _context.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("List", "Series");
         }
+
     }
 }

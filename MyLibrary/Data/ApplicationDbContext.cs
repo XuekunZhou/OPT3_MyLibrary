@@ -19,6 +19,6 @@ using MyLibrary.Models;
         public DbSet<FilmEntryModel> FilmEntries { get; set; }
         public DbSet<BookEntryModel> BookEntries { get; set; }
         public DbSet<SeriesEntryModel> SeriesEntries { get; set; }
-        public DbSet<EpisodeEntryModel> EpisodeEntries { get; set; }
+        public DbSet<EpisodeModel> Episodes { get; set; }
         public DbSet<GameEntryModel> GameEntries { get; set; }
     }

@@ -28,21 +28,24 @@ namespace MyLibrary.Controllers
             var loggedInUser = await _userManager.GetUserAsync(User);
             var watchedUser = await _userManager.FindByIdAsync(id);
 
+            if (id == null)
+            {
+                watchedUser = loggedInUser;
+            }
+
             if (watchedUser == null) 
             {
-                return RedirectToAction("Error", "NotFound");
+                return RedirectToAction("NotFound", "Error");
             }
-            else 
-            {
-                if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
-                {
-                    var books = _context.BookEntries.Where(e => e.User == watchedUser).ToList();
-                    ViewData["Title"] = watchedUser.UserName + "'s books";
-                    return View("List", books);
-                }
 
-                return RedirectToAction("Error", "Private");
+            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+            {
+                var books = _context.BookEntries.Where(e => e.User == watchedUser).ToList();
+                ViewData["Title"] = watchedUser.UserName + "'s books";
+                return View(books);
             }
+
+            return RedirectToAction("Private", "Error");
         }
 
         // GET: Book/Details/5
@@ -81,7 +84,7 @@ namespace MyLibrary.Controllers
                 bookEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(bookEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
             return View(bookEntryModel);
         }
@@ -132,7 +135,7 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
             return View(bookEntryModel);
         }
@@ -171,7 +174,7 @@ namespace MyLibrary.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ListAsync));
+            return RedirectToAction("List");
         }
 
         private bool BookEntryModelExists(int id)

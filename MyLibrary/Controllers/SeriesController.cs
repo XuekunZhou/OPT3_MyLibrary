@@ -29,28 +29,24 @@ namespace MyLibrary.Controllers
             var loggedInUser = await _userManager.GetUserAsync(User);
             var watchedUser = await _userManager.FindByIdAsync(id);
 
-            if (watchedUser == null) 
-            {
-                return RedirectToAction("Error", "NotFound");
-            }
-            else 
-            {
-                if (id == null)
+            if (id == null)
                 {
-                    var series = _context.SeriesEntries.Where(e => e.User == loggedInUser).ToList();
-                    ViewData["Title"] = loggedInUser.UserName + "'s series";
-                    return View("List", series);
+                    watchedUser = loggedInUser;
                 }
 
-                if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+            if (watchedUser == null) 
+            {
+                return RedirectToAction("NotFound", "Error");
+            }
+
+            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
                 {
                     var series = _context.SeriesEntries.Where(e => e.User == watchedUser).ToList();
                     ViewData["Title"] = watchedUser.UserName + "'s series";
-                    return View("List", series);
+                    return View(series);
                 }
 
-                return RedirectToAction("Error", "Private");
-            }
+            return RedirectToAction("Private", "Error");
         }
 
         // GET: Series/Details/5
@@ -89,7 +85,7 @@ namespace MyLibrary.Controllers
                 seriesEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(seriesEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
             return View(seriesEntryModel);
         }
@@ -140,7 +136,7 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
             return View(seriesEntryModel);
         }
@@ -179,7 +175,7 @@ namespace MyLibrary.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ListAsync));
+            return RedirectToAction("List");
         }
 
         private bool SeriesEntryModelExists(int id)

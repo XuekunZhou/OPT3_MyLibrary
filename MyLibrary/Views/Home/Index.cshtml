@@ -12,10 +12,13 @@
     if (loggedInUser != null)
     {  
         <h1>Welcome back @loggedInUser.UserName!</h1>
-        <p>Time spent on films this month: @Model.TimeSpentOnFilmsInMinutes</p>
-        <p>Time spent on series this month: @Model.TimeSpentOnSeries</p>
-        <p>Time spent on games this month: @Model.TimeSpentOnGames</p>
-        <p>Pages read of books this month: @Model.PagesReadOfBooks</p>
+        <a asp-controller="Home", asp-action="SetOverview", asp-route-id="0">week</a>
+        <a asp-controller="Home", asp-action="SetOverview", asp-route-id="1">two weeks</a>
+        <a asp-controller="Home", asp-action="SetOverview", asp-route-id="2">month</a>
+        <p>Time spent on films this @Model.Period: @Model.TimeSpentOnFilmsInMinutes</p>
+        <p>Time spent on series this @Model.Period: @Model.TimeSpentOnSeriesInMinutes</p>
+        <p>Time spent on games this @Model.Period: @Model.TimeSpentOnGamesInMinutes</p>
+        <p>Pages read of books this @Model.Period: @Model.PagesReadOfBooks</p>
     }
     else 
     {

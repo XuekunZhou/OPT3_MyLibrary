@@ -21,12 +21,18 @@ namespace MyLibrary.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-            OverviewViewModel? model = null;
+            OverviewModel? model = null;
             ViewData["Warning"] = "";
 
             if (loggedInUser != null)
             {
-                model = new OverviewViewModel(_context, loggedInUser, 7);
+                
+                switch(loggedInUser.defaultOverview)
+                {
+                    case 1: model = new TwoWeekOverviewModel(_context, loggedInUser); break;
+                    case 2: model = new MonthOverviewModel(_context, loggedInUser); break;
+                    default: model = new WeekOverviewModel(_context, loggedInUser); break;
+                }
 
                 if (model.TimeSpentOnFilmsInMinutes >= 1320)
                 {
@@ -36,9 +42,25 @@ namespace MyLibrary.Controllers
                 {
                     ViewData["Warning"] = "You should spent less time on this";
                 }
+
+                return View(model);
             }
 
-            return View(model);
+            return View();
+        }
+
+        public async Task<IActionResult> SetOverviewAsync(int id)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            
+            if (0 <= id && id <= 2)
+            {
+                loggedInUser.defaultOverview = id;
+                _context.SaveChanges();
+                
+            }
+
+            return RedirectToAction("Index");
         }
 
         [AllowAnonymous]

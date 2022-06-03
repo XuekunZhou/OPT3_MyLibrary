@@ -25,15 +25,14 @@ namespace MyLibrary.Controllers
         public async Task<IActionResult> ListAsync(string? id)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-            var watchedUser = await _userManager.FindByIdAsync(id);
-
-            var films = _context.BookEntries.Where(u => u.User.Id == id).ToList();
-
+          
             if (loggedInUser == null)
             {
                 return RedirectToAction("Login", "Account");
             }
 
+            var watchedUser = await _userManager.FindByIdAsync(id);  
+            var films = _context.BookEntries.Where(u => u.User == watchedUser).ToList();
             
             if ((id != null) && (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser)))
             {
@@ -41,7 +40,7 @@ namespace MyLibrary.Controllers
                 return View("List", films);
             }
 
-            return View("Private");
+            return RedirectToAction("Error", "Private");
         }
 
         // GET: Book/Details/5

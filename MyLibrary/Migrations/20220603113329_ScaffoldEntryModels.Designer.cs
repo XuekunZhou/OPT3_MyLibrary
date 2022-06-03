@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220603113329_ScaffoldEntryModels")]
+    partial class ScaffoldEntryModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
@@ -203,9 +205,6 @@ namespace MyLibrary.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("defaultOverview")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("listsArePublic")
                         .HasColumnType("INTEGER");
 
@@ -251,7 +250,7 @@ namespace MyLibrary.Migrations
                     b.ToTable("BookEntries");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.EpisodeModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.EpisodeEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -260,8 +259,17 @@ namespace MyLibrary.Migrations
                     b.Property<DateTime>("DateOfEntry")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("LengthInMin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ScoreOutOfTen")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("SeriesId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -272,7 +280,7 @@ namespace MyLibrary.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Episodes");
+                    b.ToTable("EpisodeEntries");
                 });
 
             modelBuilder.Entity("MyLibrary.Models.FilmEntryModel", b =>
@@ -364,9 +372,6 @@ namespace MyLibrary.Migrations
                     b.Property<int>("ScoreOutOfTen")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Size")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
@@ -447,7 +452,7 @@ namespace MyLibrary.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.EpisodeModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.EpisodeEntryModel", b =>
                 {
                     b.HasOne("MyLibrary.Models.SeriesEntryModel", "Series")
                         .WithMany("Episodes")

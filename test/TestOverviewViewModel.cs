@@ -38,7 +38,7 @@ namespace test
            Setup();
 
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(0, sut.TimeSpentOnFilmsInMinutes);
@@ -56,7 +56,7 @@ namespace test
             context.SaveChanges();
             
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(839, sut.TimeSpentOnFilmsInMinutes);
@@ -74,7 +74,7 @@ namespace test
             context.SaveChanges();
             
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(840, sut.TimeSpentOnFilmsInMinutes);
@@ -93,7 +93,7 @@ namespace test
             context.SaveChanges();
             
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(1259, sut.TimeSpentOnFilmsInMinutes);
@@ -112,7 +112,7 @@ namespace test
             context.SaveChanges();
             
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(1260, sut.TimeSpentOnFilmsInMinutes);
@@ -129,7 +129,7 @@ namespace test
             context.SaveChanges();
             
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(1000000, sut.TimeSpentOnFilmsInMinutes);
@@ -148,7 +148,7 @@ namespace test
             context.SaveChanges();
             
             // When
-            var sut = new OverviewViewModel(context, alice, 7);
+            var sut = new WeekOverviewModel(context, alice);
 
             // Then
             Assert.Equal(200, sut.TimeSpentOnFilmsInMinutes);

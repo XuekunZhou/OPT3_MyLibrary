@@ -11,105 +11,109 @@ using MyLibrary.Models;
 
 namespace MyLibrary.Controllers
 {
-    // [Authorize]
-    public class FilmController : Controller
+    [Authorize]
+    public class SeriesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public FilmController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public SeriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        // GET: Series
         public async Task<IActionResult> ListAsync(string? id)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
             var watchedUser = await _userManager.FindByIdAsync(id);
 
-            var films = _context.FilmEntries.Where(u => u.User.Id == id).ToList();
+            if (id == null)
+                {
+                    watchedUser = loggedInUser;
+                }
 
-            if (loggedInUser == null)
+            if (watchedUser == null) 
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("NotFound", "Error");
             }
 
-            
-            if ((id != null) && (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser)))
-            {
-                ViewData["Title"] = watchedUser.UserName + "'s list";
-                return View("List", films);
-            }
+            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+                {
+                    var series = _context.SeriesEntries.Where(e => e.User == watchedUser).ToList();
+                    ViewData["Title"] = watchedUser.UserName + "'s series";
+                    return View(series);
+                }
 
-            return View("Private");
+            return RedirectToAction("Private", "Error");
         }
 
-        // GET: Film/Details/5
+        // GET: Series/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.FilmEntries == null)
+            if (id == null || _context.SeriesEntries == null)
             {
                 return NotFound();
             }
 
-            var filmEntryModel = await _context.FilmEntries
+            var seriesEntryModel = await _context.SeriesEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (filmEntryModel == null)
+            if (seriesEntryModel == null)
             {
                 return NotFound();
             }
 
-            return View(filmEntryModel);
+            return View(seriesEntryModel);
         }
 
-        // GET: Film/Create
+        // GET: Series/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Film/Create
+        // POST: Series/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LengthInMinutes,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
+        public async Task<IActionResult> Create([Bind("Id,Title,ScoreOutOfTen,DateOfEntry")] SeriesEntryModel seriesEntryModel)
         {
             if (ModelState.IsValid)
             {
-                filmEntryModel.User = await _userManager.GetUserAsync(User);
-                _context.Add(filmEntryModel);
+                seriesEntryModel.User = await _userManager.GetUserAsync(User);
+                _context.Add(seriesEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("List", new {id = _userManager.GetUserId(User)});
+                return RedirectToAction("List");
             }
-            return View(filmEntryModel);
+            return View(seriesEntryModel);
         }
 
-        // GET: Film/Edit/5
+        // GET: Series/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.FilmEntries == null)
+            if (id == null || _context.SeriesEntries == null)
             {
                 return NotFound();
             }
 
-            var filmEntryModel = await _context.FilmEntries.FindAsync(id);
-            if (filmEntryModel == null)
+            var seriesEntryModel = await _context.SeriesEntries.FindAsync(id);
+            if (seriesEntryModel == null)
             {
                 return NotFound();
             }
-            return View(filmEntryModel);
+            return View(seriesEntryModel);
         }
 
-        // POST: Film/Edit/5
+        // POST: Series/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LengthInMinutes,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ScoreOutOfTen,DateOfEntry")] SeriesEntryModel seriesEntryModel)
         {
-            if (id != filmEntryModel.Id)
+            if (id != seriesEntryModel.Id)
             {
                 return NotFound();
             }
@@ -118,12 +122,12 @@ namespace MyLibrary.Controllers
             {
                 try
                 {
-                    _context.Update(filmEntryModel);
+                    _context.Update(seriesEntryModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmEntryModelExists(filmEntryModel.Id))
+                    if (!SeriesEntryModelExists(seriesEntryModel.Id))
                     {
                         return NotFound();
                     }
@@ -132,51 +136,51 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(ListAsync));
+                return RedirectToAction("List");
             }
-            return View(filmEntryModel);
+            return View(seriesEntryModel);
         }
 
-        // GET: Film/Delete/5
+        // GET: Series/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.FilmEntries == null)
+            if (id == null || _context.SeriesEntries == null)
             {
                 return NotFound();
             }
 
-            var filmEntryModel = await _context.FilmEntries
+            var seriesEntryModel = await _context.SeriesEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (filmEntryModel == null)
+            if (seriesEntryModel == null)
             {
                 return NotFound();
             }
 
-            return View(filmEntryModel);
+            return View(seriesEntryModel);
         }
 
-        // POST: Film/Delete/5
+        // POST: Series/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.FilmEntries == null)
+            if (_context.SeriesEntries == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.FilmEntries'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.SeriesEntries'  is null.");
             }
-            var filmEntryModel = await _context.FilmEntries.FindAsync(id);
-            if (filmEntryModel != null)
+            var seriesEntryModel = await _context.SeriesEntries.FindAsync(id);
+            if (seriesEntryModel != null)
             {
-                _context.FilmEntries.Remove(filmEntryModel);
+                _context.SeriesEntries.Remove(seriesEntryModel);
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ListAsync));
+            return RedirectToAction("List");
         }
 
-        private bool FilmEntryModelExists(int id)
+        private bool SeriesEntryModelExists(int id)
         {
-          return (_context.FilmEntries?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.SeriesEntries?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

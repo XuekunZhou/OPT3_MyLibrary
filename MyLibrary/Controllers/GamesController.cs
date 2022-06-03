@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,103 +11,109 @@ using MyLibrary.Models;
 
 namespace MyLibrary.Controllers
 {
-    public class BookController : Controller
+    [Authorize]
+    public class GamesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public BookController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public GamesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        // GET: Games
         public async Task<IActionResult> ListAsync(string? id)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-          
-            if (loggedInUser == null)
+            var watchedUser = await _userManager.FindByIdAsync(id);
+
+            if (id == null)
             {
-                return RedirectToAction("Login", "Account");
+                watchedUser = loggedInUser;
             }
 
-            var watchedUser = await _userManager.FindByIdAsync(id);  
-            var films = _context.BookEntries.Where(u => u.User == watchedUser).ToList();
-            
-            if ((id != null) && (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser)))
+            if (watchedUser == null) 
             {
-                ViewData["Title"] = watchedUser.UserName + "'s books";
-                return View("List", films);
+                return RedirectToAction("NotFound", "Error");
             }
 
-            return RedirectToAction("Error", "Private");
+            if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+            {
+                var games = _context.GameEntries.Where(e => e.User == watchedUser).ToList();
+                ViewData["Title"] = watchedUser.UserName + "'s games";
+                return View(games);
+            }
+
+            return RedirectToAction("Private", "Error");
         }
 
-        // GET: Book/Details/5
+        // GET: Games/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.BookEntries == null)
+            if (id == null || _context.GameEntries == null)
             {
                 return NotFound();
             }
 
-            var bookEntryModel = await _context.BookEntries
+            var gameEntryModel = await _context.GameEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookEntryModel == null)
+            if (gameEntryModel == null)
             {
                 return NotFound();
             }
 
-            return View(bookEntryModel);
+            return View(gameEntryModel);
         }
 
-        // GET: Book/Create
+        // GET: Games/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Book/Create
+        // POST: Games/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Create([Bind("TimeSpentInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookEntryModel);
+                gameEntryModel.User = await _userManager.GetUserAsync(User);
+                _context.Add(gameEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("List");
             }
-            return View(bookEntryModel);
+            return View(gameEntryModel);
         }
 
-        // GET: Book/Edit/5
+        // GET: Games/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.BookEntries == null)
+            if (id == null || _context.GameEntries == null)
             {
                 return NotFound();
             }
 
-            var bookEntryModel = await _context.BookEntries.FindAsync(id);
-            if (bookEntryModel == null)
+            var gameEntryModel = await _context.GameEntries.FindAsync(id);
+            if (gameEntryModel == null)
             {
                 return NotFound();
             }
-            return View(bookEntryModel);
+            return View(gameEntryModel);
         }
 
-        // POST: Book/Edit/5
+        // POST: Games/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Edit(int id, [Bind("TimeSpentInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
         {
-            if (id != bookEntryModel.Id)
+            if (id != gameEntryModel.Id)
             {
                 return NotFound();
             }
@@ -115,12 +122,12 @@ namespace MyLibrary.Controllers
             {
                 try
                 {
-                    _context.Update(bookEntryModel);
+                    _context.Update(gameEntryModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookEntryModelExists(bookEntryModel.Id))
+                    if (!GameEntryModelExists(gameEntryModel.Id))
                     {
                         return NotFound();
                     }
@@ -131,49 +138,49 @@ namespace MyLibrary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookEntryModel);
+            return View(gameEntryModel);
         }
 
-        // GET: Book/Delete/5
+        // GET: Games/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.BookEntries == null)
+            if (id == null || _context.GameEntries == null)
             {
                 return NotFound();
             }
 
-            var bookEntryModel = await _context.BookEntries
+            var gameEntryModel = await _context.GameEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookEntryModel == null)
+            if (gameEntryModel == null)
             {
                 return NotFound();
             }
 
-            return View(bookEntryModel);
+            return View(gameEntryModel);
         }
 
-        // POST: Book/Delete/5
+        // POST: Games/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.BookEntries == null)
+            if (_context.GameEntries == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.BookEntries'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.GameEntries'  is null.");
             }
-            var bookEntryModel = await _context.BookEntries.FindAsync(id);
-            if (bookEntryModel != null)
+            var gameEntryModel = await _context.GameEntries.FindAsync(id);
+            if (gameEntryModel != null)
             {
-                _context.BookEntries.Remove(bookEntryModel);
+                _context.GameEntries.Remove(gameEntryModel);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookEntryModelExists(int id)
+        private bool GameEntryModelExists(int id)
         {
-          return (_context.BookEntries?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.GameEntries?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

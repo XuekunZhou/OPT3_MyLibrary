@@ -13,8 +13,10 @@
             Hello @loggedInUser.UserName!
         </a>
         <ul class="dropdown-menu" aria-labelledby="accountdropdown">
-        <li><a class="dropdown-item" asp-controller="Book" asp-action="List" asp-route-id="@loggedInUser.Id">My books</a></li>
-        <li><a class="dropdown-item" asp-controller="Film" asp-action="List" asp-route-id="@loggedInUser.Id">My films</a></li>
+        <li><a class="dropdown-item" asp-controller="Books" asp-action="List" asp-route-id="@loggedInUser.Id">My books</a></li>
+        <li><a class="dropdown-item" asp-controller="Films" asp-action="List" asp-route-id="@loggedInUser.Id">My films</a></li>
+        <li><a class="dropdown-item" asp-controller="Series" asp-action="List" asp-route-id="@loggedInUser.Id">My series</a></li>
+        <li><a class="dropdown-item" asp-controller="Games" asp-action="List" asp-route-id="@loggedInUser.Id">My games</a></li>
         <li><a class="dropdown-item" asp-controller="Account" asp-action="Index">Settings</a></li>
         </ul>
     </div>

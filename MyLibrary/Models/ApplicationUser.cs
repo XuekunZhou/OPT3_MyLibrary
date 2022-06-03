@@ -1,9 +1,12 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace MyLibrary.Models
 {
     public class ApplicationUser: IdentityUser
     {
+        [Range(0,2)]
+        public int defaultOverview { get; set; }
         public Boolean listsArePublic { get; set; }
 
         public ICollection<ApplicationUser>? Friends { get; set; }

@@ -3,7 +3,7 @@
 @inject UserManager<ApplicationUser> userManager
 @inject SignInManager<ApplicationUser> signInManager
 
-@model OverviewViewModel
+@model OverviewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -12,7 +12,10 @@
     if (loggedInUser != null)
     {  
         <h1>Welcome back @loggedInUser.UserName!</h1>
-        <p>Time spent on Films this week: @Model.TimeSpentOnFilmsInMinutes</p>
+        <p>Time spent on films this month: @Model.TimeSpentOnFilmsInMinutes</p>
+        <p>Time spent on series this month: @Model.TimeSpentOnSeries</p>
+        <p>Time spent on games this month: @Model.TimeSpentOnGames</p>
+        <p>Pages read of books this month: @Model.PagesReadOfBooks</p>
     }
     else 
     {

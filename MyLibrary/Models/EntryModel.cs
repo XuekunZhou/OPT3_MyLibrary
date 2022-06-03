@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyLibrary.Models
 {
-    public class EntryModel
+    public abstract class EntryModel
     {
         [Key]
         public int Id { get; set; }

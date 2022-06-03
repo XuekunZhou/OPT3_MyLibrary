@@ -78,9 +78,10 @@ namespace MyLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                bookEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(bookEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListAsync));
             }
             return View(bookEntryModel);
         }
@@ -131,7 +132,7 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListAsync));
             }
             return View(bookEntryModel);
         }
@@ -170,7 +171,7 @@ namespace MyLibrary.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ListAsync));
         }
 
         private bool BookEntryModelExists(int id)

@@ -79,9 +79,10 @@ namespace MyLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                gameEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(gameEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListAsync));
             }
             return View(gameEntryModel);
         }

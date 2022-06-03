@@ -66,9 +66,11 @@ namespace MyLibrary.Controllers
         }
 
         // GET: Episodes/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            return View();
+            var model = new EpisodeEntryModel { Series = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault(),
+            Title = "hello"};
+            return View(model);
         }
 
         // POST: Episodes/Create
@@ -80,9 +82,10 @@ namespace MyLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                episodeEntryModel.User = await _userManager.GetUserAsync(User);
                 _context.Add(episodeEntryModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListAsync));
             }
             return View(episodeEntryModel);
         }
@@ -133,7 +136,7 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListAsync));
             }
             return View(episodeEntryModel);
         }
@@ -172,7 +175,7 @@ namespace MyLibrary.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ListAsync));
         }
 
         private bool EpisodeEntryModelExists(int id)

@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyLibrary.Models
 {
-    public class EpisodeEntryModel: EntryModel
+    public class EpisodeEntryModel
     {
-        [Range(0, int.MaxValue)]
-        public int LengthInMin { get; set; }
-
+        [Key]
+        public int Id { get; set; }
+        public DateTime DateOfEntry { get; set; }
         public SeriesEntryModel Series { get; set; }
+        public ApplicationUser User { get; set; }
     }
 }

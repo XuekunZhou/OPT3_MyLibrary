@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateOfEntry)
             </th>
+            <th>
+                Episodes watched
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,6 +38,11 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateOfEntry)
+            </td>
+            <td>
+                <a class="btn btn-secondary btn-sm" asp-controller="Episodes" asp-action="RemoveEpisode" asp-route-id="@item.Id">-</a>
+                @ViewData["count"]
+                <a class="btn btn-secondary btn-sm" asp-controller="Episodes" asp-action="AddEpisode" asp-route-id="@item.Id">+</a>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

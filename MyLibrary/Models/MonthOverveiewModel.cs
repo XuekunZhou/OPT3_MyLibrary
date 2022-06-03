@@ -16,7 +16,7 @@ namespace MyLibrary.Models
             SetPagesReadOfBooks(28);
             SetTimeSpentOnFilms(28);
             SetTimeSpentOnGamesIn(28);
-            SetTimeSpentOnSeries(28);
+            SetEpisodesWatchedOfSeries(28);
         }
     }
 }

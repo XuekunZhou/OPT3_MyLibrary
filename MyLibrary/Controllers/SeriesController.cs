@@ -35,6 +35,13 @@ namespace MyLibrary.Controllers
             }
             else 
             {
+                if (id == null)
+                {
+                    var series = _context.SeriesEntries.Where(e => e.User == loggedInUser).ToList();
+                    ViewData["Title"] = loggedInUser.UserName + "'s series";
+                    return View("List", series);
+                }
+
                 if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
                 {
                     var series = _context.SeriesEntries.Where(e => e.User == watchedUser).ToList();

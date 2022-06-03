@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace test;
 
-public class TestFilmController
+public class TestFilmsController
 {
     // A: list is public
     // B: UserOne is friends with UserTwo
@@ -72,7 +72,7 @@ public class TestFilmController
         // Given
         Setup();
         var mgr = GetMockUserManager(alice, carol);
-        var sut = new FilmController(context, mgr.Object);
+        var sut = new FilmsController(context, mgr.Object);
 
         // When
         var res = await sut.ListAsync(carol.Id);
@@ -89,7 +89,7 @@ public class TestFilmController
         // Given
         Setup();
         var mgr = GetMockUserManager(alice, bob);
-        var sut = new FilmController(context, mgr.Object);
+        var sut = new FilmsController(context, mgr.Object);
 
         // When
         var res = await sut.ListAsync(bob.Id);
@@ -106,7 +106,7 @@ public class TestFilmController
         // Given
         Setup();
         var mgr = GetMockUserManager(null, carol);
-        var sut = new FilmController(context, mgr.Object);
+        var sut = new FilmsController(context, mgr.Object);
 
         // When
         var res = await sut.ListAsync(carol.Id);
@@ -123,7 +123,7 @@ public class TestFilmController
         // Given
         Setup();
         var mgr = GetMockUserManager(carol, bob);
-        var sut = new FilmController(context, mgr.Object);
+        var sut = new FilmsController(context, mgr.Object);
 
         // When
         var res = await sut.ListAsync(bob.Id);

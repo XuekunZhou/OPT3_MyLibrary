@@ -11,38 +11,45 @@ using MyLibrary.Models;
 
 namespace MyLibrary.Controllers
 {
-    // [Authorize]
-    public class FilmController : Controller
+    [Authorize]
+    public class FilmsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public FilmController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public FilmsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> ListAsync(string? id)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-            var watchedUser = await _userManager.FindByIdAsync(id);
-
-            var films = _context.FilmEntries.Where(u => u.User.Id == id).ToList();
-
+          
             if (loggedInUser == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-
             
-            if ((id != null) && (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser)))
-            {
-                ViewData["Title"] = watchedUser.UserName + "'s list";
-                return View("List", films);
-            }
+            var watchedUser = await _userManager.FindByIdAsync(id);
 
-            return View("Private");
+            if (watchedUser == null) 
+            {
+                return RedirectToAction("Error", "NotFound");
+            }
+            else 
+            {
+                if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+                {
+                    var films = _context.FilmEntries.Where(e => e.User == watchedUser).ToList();
+                    ViewData["Title"] = watchedUser.UserName + "'s films";
+                    return View("List", films);
+                }
+
+                return RedirectToAction("Error", "Private");
+            }
         }
 
         // GET: Film/Details/5

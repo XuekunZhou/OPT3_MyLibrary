@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,103 +11,106 @@ using MyLibrary.Models;
 
 namespace MyLibrary.Controllers
 {
-    public class BookController : Controller
+    [Authorize]
+    public class EpisodesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public BookController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public EpisodesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> ListAsync(string? id)
+        // GET: Episodes
+        public async Task<IActionResult> ListAsync(int? id)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-          
-            if (loggedInUser == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            var watchedSeries = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault(); 
 
-            var watchedUser = await _userManager.FindByIdAsync(id);  
-            var films = _context.BookEntries.Where(u => u.User == watchedUser).ToList();
-            
-            if ((id != null) && (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser)))
+            if (watchedSeries == null) 
             {
-                ViewData["Title"] = watchedUser.UserName + "'s books";
-                return View("List", films);
+                return RedirectToAction("Error", "NotFound");
             }
+            else 
+            {
+                var watchedUser = watchedSeries.User;
+                if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
+                {
+                    var episodes = _context.EpisodeEntries.Where(e => e.Series == watchedSeries).ToList();
+                    ViewData["Title"] = watchedSeries.Title + "'s episodes";
+                    return View("List", episodes);
+                }
 
-            return RedirectToAction("Error", "Private");
+                return RedirectToAction("Error", "Private");
+            }
         }
 
-        // GET: Book/Details/5
+        // GET: Episodes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.BookEntries == null)
+            if (id == null || _context.EpisodeEntries == null)
             {
                 return NotFound();
             }
 
-            var bookEntryModel = await _context.BookEntries
+            var episodeEntryModel = await _context.EpisodeEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookEntryModel == null)
+            if (episodeEntryModel == null)
             {
                 return NotFound();
             }
 
-            return View(bookEntryModel);
+            return View(episodeEntryModel);
         }
 
-        // GET: Book/Create
+        // GET: Episodes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Book/Create
+        // POST: Episodes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Create([Bind("LengthInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] EpisodeEntryModel episodeEntryModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(bookEntryModel);
+                _context.Add(episodeEntryModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookEntryModel);
+            return View(episodeEntryModel);
         }
 
-        // GET: Book/Edit/5
+        // GET: Episodes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.BookEntries == null)
+            if (id == null || _context.EpisodeEntries == null)
             {
                 return NotFound();
             }
 
-            var bookEntryModel = await _context.BookEntries.FindAsync(id);
-            if (bookEntryModel == null)
+            var episodeEntryModel = await _context.EpisodeEntries.FindAsync(id);
+            if (episodeEntryModel == null)
             {
                 return NotFound();
             }
-            return View(bookEntryModel);
+            return View(episodeEntryModel);
         }
 
-        // POST: Book/Edit/5
+        // POST: Episodes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Edit(int id, [Bind("LengthInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] EpisodeEntryModel episodeEntryModel)
         {
-            if (id != bookEntryModel.Id)
+            if (id != episodeEntryModel.Id)
             {
                 return NotFound();
             }
@@ -115,12 +119,12 @@ namespace MyLibrary.Controllers
             {
                 try
                 {
-                    _context.Update(bookEntryModel);
+                    _context.Update(episodeEntryModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookEntryModelExists(bookEntryModel.Id))
+                    if (!EpisodeEntryModelExists(episodeEntryModel.Id))
                     {
                         return NotFound();
                     }
@@ -131,49 +135,49 @@ namespace MyLibrary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookEntryModel);
+            return View(episodeEntryModel);
         }
 
-        // GET: Book/Delete/5
+        // GET: Episodes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.BookEntries == null)
+            if (id == null || _context.EpisodeEntries == null)
             {
                 return NotFound();
             }
 
-            var bookEntryModel = await _context.BookEntries
+            var episodeEntryModel = await _context.EpisodeEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookEntryModel == null)
+            if (episodeEntryModel == null)
             {
                 return NotFound();
             }
 
-            return View(bookEntryModel);
+            return View(episodeEntryModel);
         }
 
-        // POST: Book/Delete/5
+        // POST: Episodes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.BookEntries == null)
+            if (_context.EpisodeEntries == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.BookEntries'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.EpisodeEntries'  is null.");
             }
-            var bookEntryModel = await _context.BookEntries.FindAsync(id);
-            if (bookEntryModel != null)
+            var episodeEntryModel = await _context.EpisodeEntries.FindAsync(id);
+            if (episodeEntryModel != null)
             {
-                _context.BookEntries.Remove(bookEntryModel);
+                _context.EpisodeEntries.Remove(episodeEntryModel);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookEntryModelExists(int id)
+        private bool EpisodeEntryModelExists(int id)
         {
-          return (_context.BookEntries?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.EpisodeEntries?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

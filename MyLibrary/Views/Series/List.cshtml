@@ -1,10 +1,6 @@
 @model IEnumerable<MyLibrary.Models.SeriesEntryModel>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -19,10 +15,10 @@
                 @Html.DisplayNameFor(model => model.ScoreOutOfTen)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfEntry)
+                @Html.DisplayNameFor(model => model.TotalEpisodesWatched)
             </th>
             <th>
-                Episodes watched
+                @Html.DisplayNameFor(model => model.DateOfEntry)
             </th>
             <th></th>
         </tr>
@@ -37,12 +33,12 @@
                 @Html.DisplayFor(modelItem => item.ScoreOutOfTen)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateOfEntry)
+                <a class="btn btn-secondary btn-sm" asp-controller="SeriesSessions" asp-action="RemoveEpisode" asp-route-id="@item.Id">-</a>
+                @Html.DisplayFor(modelItem => item.TotalEpisodesWatched)
+                <a class="btn btn-secondary btn-sm" asp-controller="SeriesSessions" asp-action="AddEpisode" asp-route-id="@item.Id">+</a>
             </td>
             <td>
-                <a class="btn btn-secondary btn-sm" asp-controller="Episodes" asp-action="RemoveEpisode" asp-route-id="@item.Id">-</a>
-                @Html.DisplayFor(modelItem => item.TotalEpisodesWatched)
-                <a class="btn btn-secondary btn-sm" asp-controller="Episodes" asp-action="AddEpisode" asp-route-id="@item.Id">+</a>
+                @Html.DisplayFor(modelItem => item.DateOfEntry)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

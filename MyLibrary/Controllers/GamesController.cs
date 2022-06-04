@@ -121,7 +121,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TimeSpentInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
+        public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("TimeSpentInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
         {
             if (id != gameEntryModel.Id)
             {
@@ -129,7 +129,8 @@ namespace MyLibrary.Controllers
             }
 
             if (ModelState.IsValid)
-            {
+            {   
+                gameEntryModel.User = await _userManager.GetUserAsync(User);
                 try
                 {
                     _context.Update(gameEntryModel);
@@ -146,7 +147,23 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                var dif = gameEntryModel.TimeSpentInMin - oldTotal;
+                if(dif != 0)
+                {
+                    var session = new GameSessionModel
+                    {
+                        TimeSpentInMinutes = dif,
+                        DateOfSession = DateTime.UtcNow,
+                        Entry = gameEntryModel,
+                        User = gameEntryModel.User
+                    };
+
+                    _context.Add(session);
+                    _context.SaveChanges();
+                }
+                
+                return RedirectToAction("Index");
             }
             return View(gameEntryModel);
         }
@@ -185,7 +202,7 @@ namespace MyLibrary.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         private bool GameEntryModelExists(int id)

@@ -121,7 +121,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ScoreOutOfTen,DateOfEntry")] SeriesEntryModel seriesEntryModel)
+        public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("Id,Title,ScoreOutOfTen,TotalEpisodesWatched,DateOfEntry")] SeriesEntryModel seriesEntryModel)
         {
             if (id != seriesEntryModel.Id)
             {
@@ -130,6 +130,7 @@ namespace MyLibrary.Controllers
 
             if (ModelState.IsValid)
             {
+                seriesEntryModel.User = await _userManager.GetUserAsync(User);
                 try
                 {
                     _context.Update(seriesEntryModel);
@@ -146,6 +147,22 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
+
+                var dif = seriesEntryModel.TotalEpisodesWatched - oldTotal;
+                if(dif != 0)
+                {
+                    var session = new SeriesSessionModel
+                    {
+                        NumberOfEpisodesWatches = dif,
+                        DateOfSession = DateTime.UtcNow,
+                        Entry = seriesEntryModel,
+                        User = seriesEntryModel.User
+                    };
+
+                    _context.Add(session);
+                    _context.SaveChanges();
+                }
+
                 return RedirectToAction("List");
             }
             return View(seriesEntryModel);

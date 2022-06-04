@@ -12,12 +12,12 @@ using MyLibrary.Models;
 namespace MyLibrary.Controllers
 {
     [Authorize]
-    public class EpisodesController : Controller
+    public class SeriesSessionsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public EpisodesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public SeriesSessionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -32,35 +32,46 @@ namespace MyLibrary.Controllers
                 var episode = new SeriesSessionModel
                 {
                     DateOfSession = DateTime.UtcNow,
+                    NumberOfEpisodesWatches = 1,
                     Entry = series,
                     User = await _userManager.GetUserAsync(User)
                 };
 
                 _context.Add(episode);
-                series.TotalEpisodesWatched++;
+                series.TotalEpisodesWatched ++;;
                 _context.SaveChanges();
             }
 
             return RedirectToAction("List", "Series");
         }
 
-        public IActionResult RemoveEpisode(int id)
+        public async Task<IActionResult> RemoveEpisode(int id)
         {
             var series = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault();
+
             if (series != null)
             {
-                var episode = _context.SeriesSessions.Where(e => e.Entry == series).FirstOrDefault();
-
-                if (episode != null)
+                if (series.TotalEpisodesWatched < 1)
                 {
-                    _context.Remove(episode);
-                    series.TotalEpisodesWatched--;
+                    series.TotalEpisodesWatched = 0;;
                     _context.SaveChanges();
+                    return RedirectToAction("List", "Series");
                 }
+
+                var episode = new SeriesSessionModel
+                {
+                    DateOfSession = DateTime.UtcNow,
+                    NumberOfEpisodesWatches = -1,
+                    Entry = series,
+                    User = await _userManager.GetUserAsync(User)
+                };
+
+                _context.Add(episode);
+                series.TotalEpisodesWatched --;
+                _context.SaveChanges();
             }
 
             return RedirectToAction("List", "Series");
         }
-
     }
 }

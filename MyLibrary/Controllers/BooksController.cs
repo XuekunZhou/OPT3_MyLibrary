@@ -120,7 +120,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Edit(int id, int oldTotal,[Bind("TotalPagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
         {
             if (id != bookEntryModel.Id)
             {
@@ -129,6 +129,7 @@ namespace MyLibrary.Controllers
 
             if (ModelState.IsValid)
             {
+                bookEntryModel.User = await _userManager.GetUserAsync(User);
                 try
                 {
                     _context.Update(bookEntryModel);
@@ -144,6 +145,21 @@ namespace MyLibrary.Controllers
                     {
                         throw;
                     }
+                }
+                var dif = bookEntryModel.TotalPagesRead - oldTotal;
+
+                if(dif != 0)
+                {
+                    var session = new BookSessionModel
+                    {
+                        NumberOfPagesRead = dif,
+                        DateOfSession = DateTime.UtcNow,
+                        Entry = bookEntryModel,
+                        User = bookEntryModel.User
+                    };
+
+                    _context.Add(session);
+                    _context.SaveChanges();
                 }
                 return RedirectToAction("List");
             }

@@ -1,10 +1,6 @@
 @model IEnumerable<MyLibrary.Models.GameEntryModel>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -37,7 +33,9 @@
                 @Html.DisplayFor(modelItem => item.ScoreOutOfTen)
             </td>
             <td>
+                <a class="btn btn-secondary btn-sm" asp-controller="GameSessions" asp-action="RemoveSession" asp-route-id="@item.Id">-</a>
                 @Html.DisplayFor(modelItem => item.TimeSpentInMin)
+                <a class="btn btn-secondary btn-sm" asp-controller="GameSessions" asp-action="AddSession" asp-route-id="@item.Id">+</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateOfEntry)

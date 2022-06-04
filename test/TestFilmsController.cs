@@ -40,7 +40,7 @@ public class TestFilmsController
         carol = new ApplicationUser();
         carol.Id = "333";
 
-        var friend = new Friend();
+        var friend = new Friendship();
         friend.UserOne = alice;
         friend.UserTwo = bob;
 

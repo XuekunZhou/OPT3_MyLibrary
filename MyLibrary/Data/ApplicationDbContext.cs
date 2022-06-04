@@ -14,11 +14,14 @@ using MyLibrary.Models;
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Friend> Friends { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
         
         public DbSet<FilmEntryModel> FilmEntries { get; set; }
         public DbSet<BookEntryModel> BookEntries { get; set; }
         public DbSet<SeriesEntryModel> SeriesEntries { get; set; }
-        public DbSet<EpisodeModel> Episodes { get; set; }
         public DbSet<GameEntryModel> GameEntries { get; set; }
+
+        public DbSet<SeriesSessionModel> SeriesSessions { get; set; }
+        public DbSet<BookSessionModel> BookSessions { get; set; }
+        public DbSet<GameSessionModel> GameSessions { get; set; }
     }

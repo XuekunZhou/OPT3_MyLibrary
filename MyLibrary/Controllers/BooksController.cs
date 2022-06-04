@@ -77,12 +77,22 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Create([Bind("TotalPagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
         {
             if (ModelState.IsValid)
             {
                 bookEntryModel.User = await _userManager.GetUserAsync(User);
+
+                var session = new BookSessionModel
+                {
+                    NumberOfPagesRead = bookEntryModel.TotalPagesRead,
+                    DateOfSession = DateTime.UtcNow,
+                    Entry = bookEntryModel,
+                    User = bookEntryModel.User
+                };
+
                 _context.Add(bookEntryModel);
+                _context.Add(session);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("List");
             }

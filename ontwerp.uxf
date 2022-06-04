@@ -38,7 +38,7 @@ fontsize=10
 + Id: int
 + Title: String
 + ScoreOutOfTen: int
-+ DateWatched: DateTime
++ DateOfEntry: DateTime
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -78,7 +78,7 @@ fontsize=10
     </coordinates>
     <panel_attributes>FilmEntryModel
 --
-+ TimeSpentInMinutes</panel_attributes>
++ LengthInMinutes: int</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -546,7 +546,7 @@ bg=blue</panel_attributes>
     </coordinates>
     <panel_attributes>BookSessionModel
 --
-+ NumberOfPages: int
++ NumberOfPagesRead: int
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -598,7 +598,7 @@ m2=n</panel_attributes>
     <panel_attributes>/SessionModel/
 --
 + Id: int
-+ DateWatched: DateTime</panel_attributes>
++ DateOfSession: DateTime</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

@@ -41,7 +41,7 @@
             </td>
             <td>
                 <a class="btn btn-secondary btn-sm" asp-controller="Episodes" asp-action="RemoveEpisode" asp-route-id="@item.Id">-</a>
-                @Html.DisplayFor(modelItem => item.Size)
+                @Html.DisplayFor(modelItem => item.TotalEpisodesWatched)
                 <a class="btn btn-secondary btn-sm" asp-controller="Episodes" asp-action="AddEpisode" asp-route-id="@item.Id">+</a>
             </td>
             <td>

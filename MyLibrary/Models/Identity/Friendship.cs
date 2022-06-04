@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MyLibrary.Models
 {
 
-    public class Friend
+    public class Friendship
     {
         public int Id { get; set; }
         public ApplicationUser UserOne { get; set; }

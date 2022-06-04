@@ -29,15 +29,15 @@ namespace MyLibrary.Controllers
 
             if (series != null)
             {
-                var episode = new EpisodeModel
+                var episode = new SeriesSessionModel
                 {
-                    DateOfEntry = DateTime.UtcNow,
-                    Series = series,
+                    DateOfSession = DateTime.UtcNow,
+                    Entry = series,
                     User = await _userManager.GetUserAsync(User)
                 };
 
                 _context.Add(episode);
-                series.Size++;
+                series.TotalEpisodesWatched++;
                 _context.SaveChanges();
             }
 
@@ -49,12 +49,12 @@ namespace MyLibrary.Controllers
             var series = _context.SeriesEntries.Where(s => s.Id == id).FirstOrDefault();
             if (series != null)
             {
-                var episode = _context.Episodes.Where(e => e.Series == series).FirstOrDefault();
+                var episode = _context.SeriesSessions.Where(e => e.Entry == series).FirstOrDefault();
 
                 if (episode != null)
                 {
                     _context.Remove(episode);
-                    series.Size--;
+                    series.TotalEpisodesWatched--;
                     _context.SaveChanges();
                 }
             }

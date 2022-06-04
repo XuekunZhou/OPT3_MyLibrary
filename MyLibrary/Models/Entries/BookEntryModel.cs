@@ -5,6 +5,8 @@ namespace MyLibrary.Models
     public class BookEntryModel: EntryModel
     {
         [Range(0, int.MaxValue)]
-        public int PagesRead { get; set; }
+        [Display(Name ="Total pages read")]
+        public int TotalPagesRead { get; set; }
+        public ICollection<BookSessionModel>? Sessions { get; set; }
     }
 }

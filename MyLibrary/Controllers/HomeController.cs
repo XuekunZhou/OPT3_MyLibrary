@@ -53,12 +53,8 @@ namespace MyLibrary.Controllers
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
             
-            if (0 <= id && id <= 2)
-            {
-                loggedInUser.defaultOverview = id;
-                _context.SaveChanges();
-                
-            }
+            loggedInUser.SetDefaultOverview(id);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }

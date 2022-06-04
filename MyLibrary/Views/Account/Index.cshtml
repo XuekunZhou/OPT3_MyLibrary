@@ -1,5 +1,9 @@
 @model ApplicationUser
 
+@{
+    ViewData["Title"] = "Account settings";
+}
+
 @if (@Model.listsArePublic)
 {
     <p>Your lists are currently: <span class="fw-bold">Public</span></p>
@@ -11,3 +15,6 @@ else
     <p>Set list to <a class="btn btn-primary" asp-action="SetPublic" asp-controller="Account">Public</a></p>
 
 }
+
+<a asp-action="Friends" class="btn btn-primary">My friends</a>
+<a asp-action="People" class="btn btn-primary">Find people</a>

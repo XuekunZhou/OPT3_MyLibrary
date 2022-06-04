@@ -6,7 +6,7 @@ using Xunit;
 
 namespace test
 {
-    public class TestOverviewViewModel
+    public class TestOverviewModel
     {
         // Equivalance testing
 
@@ -15,7 +15,7 @@ namespace test
 
         private void Setup()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("TestOverviewViewModel").Options;
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase("TestOverviewModel").Options;
             context = new ApplicationDbContext(options);
             context.Database.EnsureCreated();
 

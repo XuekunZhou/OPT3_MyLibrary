@@ -23,21 +23,21 @@ namespace MyLibrary.Models
         protected void SetEpisodesWatchedOfSeries(int days)
         {
             var date = DateTime.Now.AddDays(-days);
-            var totalEpisodes = _context.Episodes.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Count();
+            var totalEpisodes = _context.SeriesSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.NumberOfEpisodesWatches);
             EpisodesWatchedOfSeries = totalEpisodes;
         }
 
         protected void SetTimeSpentOnGamesIn(int days)
         {
             var date = DateTime.Now.AddDays(-days);
-            var totalTime = _context.GameEntries.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Sum(x => x.TimeSpentInMin);
+            var totalTime = _context.GameSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.TimeSpentInMinutes);
             TimeSpentOnGamesInMinutes = totalTime;
         }
 
         protected void SetPagesReadOfBooks(int days)
         {
             var date = DateTime.Now.AddDays(-days);
-            var totalTime = _context.BookEntries.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Sum(x => x.PagesRead);
+            var totalTime = _context.BookSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.NumberOfPagesRead);
             PagesReadOfBooks = totalTime;
         }
         

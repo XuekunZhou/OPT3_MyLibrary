@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220604034506_Rename")]
+    partial class Rename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
@@ -223,6 +225,34 @@ namespace MyLibrary.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("MyLibrary.Models.BookEntryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateOfEntry")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ScoreOutOfTen")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalPagesRead")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BookEntries");
+                });
+
             modelBuilder.Entity("MyLibrary.Models.BookSessionModel", b =>
                 {
                     b.Property<int>("Id")
@@ -235,10 +265,10 @@ namespace MyLibrary.Migrations
                     b.Property<DateTime>("DateOfSession")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("EntryId")
+                    b.Property<int>("NumberOfPagesRead")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("NumberOfPagesRead")
+                    b.Property<int?>("SeriesId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
@@ -248,14 +278,14 @@ namespace MyLibrary.Migrations
 
                     b.HasIndex("BookEntryModelId");
 
-                    b.HasIndex("EntryId");
+                    b.HasIndex("SeriesId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BookSessions");
+                    b.ToTable("BookSessionModel");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.EntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.FilmEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -264,9 +294,8 @@ namespace MyLibrary.Migrations
                     b.Property<DateTime>("DateOfEntry")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("LengthInMinutes")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("ScoreOutOfTen")
                         .HasColumnType("INTEGER");
@@ -281,12 +310,10 @@ namespace MyLibrary.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("EntryModel");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("EntryModel");
+                    b.ToTable("FilmEntries");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.Friendship", b =>
+            modelBuilder.Entity("MyLibrary.Models.Friend", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -304,22 +331,53 @@ namespace MyLibrary.Migrations
 
                     b.HasIndex("UserTwoId");
 
-                    b.ToTable("Friendships");
+                    b.ToTable("Friends");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.GameSessionModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.GameEntryModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateOfSession")
+                    b.Property<DateTime>("DateOfEntry")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("EntryId")
+                    b.Property<int>("ScoreOutOfTen")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("TimeSpentInMinutes")
+                    b.Property<int>("TimeSpentInMin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GameEntries");
+                });
+
+            modelBuilder.Entity("MyLibrary.Models.SeriesEntryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateOfEntry")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ScoreOutOfTen")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalEpisodesWatched")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
@@ -327,11 +385,9 @@ namespace MyLibrary.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntryId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("GameSessions");
+                    b.ToTable("SeriesEntries");
                 });
 
             modelBuilder.Entity("MyLibrary.Models.SeriesSessionModel", b =>
@@ -343,13 +399,10 @@ namespace MyLibrary.Migrations
                     b.Property<DateTime>("DateOfSession")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("EntryId")
+                    b.Property<int?>("SeriesId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("NumberOfEpisodesWatches")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("SeriesEntryModelId")
+                    b.Property<int>("TimeSpentInMinutes")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
@@ -357,53 +410,11 @@ namespace MyLibrary.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EntryId");
-
-                    b.HasIndex("SeriesEntryModelId");
+                    b.HasIndex("SeriesId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SeriesSessions");
-                });
-
-            modelBuilder.Entity("MyLibrary.Models.BookEntryModel", b =>
-                {
-                    b.HasBaseType("MyLibrary.Models.EntryModel");
-
-                    b.Property<int>("TotalPagesRead")
-                        .HasColumnType("INTEGER");
-
-                    b.HasDiscriminator().HasValue("BookEntryModel");
-                });
-
-            modelBuilder.Entity("MyLibrary.Models.FilmEntryModel", b =>
-                {
-                    b.HasBaseType("MyLibrary.Models.EntryModel");
-
-                    b.Property<int>("LengthInMinutes")
-                        .HasColumnType("INTEGER");
-
-                    b.HasDiscriminator().HasValue("FilmEntryModel");
-                });
-
-            modelBuilder.Entity("MyLibrary.Models.GameEntryModel", b =>
-                {
-                    b.HasBaseType("MyLibrary.Models.EntryModel");
-
-                    b.Property<int>("TimeSpentInMin")
-                        .HasColumnType("INTEGER");
-
-                    b.HasDiscriminator().HasValue("GameEntryModel");
-                });
-
-            modelBuilder.Entity("MyLibrary.Models.SeriesEntryModel", b =>
-                {
-                    b.HasBaseType("MyLibrary.Models.EntryModel");
-
-                    b.Property<int>("TotalEpisodesWatched")
-                        .HasColumnType("INTEGER");
-
-                    b.HasDiscriminator().HasValue("SeriesEntryModel");
+                    b.ToTable("Episodes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -464,26 +475,35 @@ namespace MyLibrary.Migrations
                         .HasForeignKey("ApplicationUserId");
                 });
 
+            modelBuilder.Entity("MyLibrary.Models.BookEntryModel", b =>
+                {
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MyLibrary.Models.BookSessionModel", b =>
                 {
                     b.HasOne("MyLibrary.Models.BookEntryModel", null)
                         .WithMany("Sessions")
                         .HasForeignKey("BookEntryModelId");
 
-                    b.HasOne("MyLibrary.Models.EntryModel", "Entry")
+                    b.HasOne("MyLibrary.Models.SeriesEntryModel", "Series")
                         .WithMany()
-                        .HasForeignKey("EntryId");
+                        .HasForeignKey("SeriesId");
 
                     b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Entry");
+                    b.Navigation("Series");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.EntryModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.FilmEntryModel", b =>
                 {
                     b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
@@ -492,7 +512,7 @@ namespace MyLibrary.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.Friendship", b =>
+            modelBuilder.Entity("MyLibrary.Models.Friend", b =>
                 {
                     b.HasOne("MyLibrary.Models.ApplicationUser", "UserOne")
                         .WithMany()
@@ -507,36 +527,35 @@ namespace MyLibrary.Migrations
                     b.Navigation("UserTwo");
                 });
 
-            modelBuilder.Entity("MyLibrary.Models.GameSessionModel", b =>
+            modelBuilder.Entity("MyLibrary.Models.GameEntryModel", b =>
                 {
-                    b.HasOne("MyLibrary.Models.EntryModel", "Entry")
-                        .WithMany()
-                        .HasForeignKey("EntryId");
-
                     b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Entry");
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyLibrary.Models.SeriesEntryModel", b =>
+                {
+                    b.HasOne("MyLibrary.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyLibrary.Models.SeriesSessionModel", b =>
                 {
-                    b.HasOne("MyLibrary.Models.EntryModel", "Entry")
-                        .WithMany()
-                        .HasForeignKey("EntryId");
-
-                    b.HasOne("MyLibrary.Models.SeriesEntryModel", null)
+                    b.HasOne("MyLibrary.Models.SeriesEntryModel", "Series")
                         .WithMany("Episodes")
-                        .HasForeignKey("SeriesEntryModelId");
+                        .HasForeignKey("SeriesId");
 
                     b.HasOne("MyLibrary.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Entry");
+                    b.Navigation("Series");
 
                     b.Navigation("User");
                 });

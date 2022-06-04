@@ -83,7 +83,17 @@ namespace MyLibrary.Controllers
             if (ModelState.IsValid)
             {
                 gameEntryModel.User = await _userManager.GetUserAsync(User);
+
+                var session = new GameSessionModel
+                {
+                    TimeSpentInMinutes = gameEntryModel.TimeSpentInMin,
+                    DateOfSession = DateTime.UtcNow,
+                    Entry = gameEntryModel,
+                    User = gameEntryModel.User
+                };
+
                 _context.Add(gameEntryModel);
+                _context.Add(session);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("List");
             }

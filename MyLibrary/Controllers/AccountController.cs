@@ -104,6 +104,47 @@ namespace MyLibrary.Controllers
             return RedirectToAction("Index", "Account");
         }
         
+        public async Task<IActionResult> PeopleAsync()
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            return View(_context.ApplicationUsers.Where(u => u.Id != loggedInUser.Id).ToList());
+        }
+
+        public async Task<IActionResult> FriendsAsync()
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            return View(_context.ApplicationUsers.Where(u => u.Id != loggedInUser.Id).ToList());
+        }
+
+        public async Task<IActionResult> RemoveFriendAsync(string id)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var watchedUser = await _userManager.FindByIdAsync(id);
+
+            loggedInUser.RemoveFriend(watchedUser);
+            _context.SaveChanges();
+            return RedirectToAction("Friends");
+        }
+
+        public async Task<IActionResult> AddFriendPAsync(string id)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var watchedUser = await _userManager.FindByIdAsync(id);
+
+            loggedInUser.AddFriend(watchedUser);
+            _context.SaveChanges();
+            return RedirectToAction("People");
+        }
+
+        public async Task<IActionResult> RemoveFriendPAsync(string id)
+        {
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var watchedUser = await _userManager.FindByIdAsync(id);
+
+            loggedInUser.RemoveFriend(watchedUser);
+            _context.SaveChanges();
+            return RedirectToAction("People");
+        }
         
     }
 }

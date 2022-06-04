@@ -1,0 +1,50 @@
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<MyLibrary.Models.ApplicationUser>
+@inject UserManager<ApplicationUser> _userManager
+
+@{
+    ViewData["Title"] = "People";
+    var loggedInUser = await _userManager.GetUserAsync(User);
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @if (item.listsArePublic || loggedInUser.IsFriendsWith(item))
+                {
+                    <span>
+                        <a class="btn btn-primary btn-sm" asp-controller="Books" asp-action="List" asp-route-id="@item.Id">Books</a> 
+                        <a class="btn btn-primary btn-sm" asp-controller="Films" asp-action="List" asp-route-id="@item.Id">Films</a> 
+                        <a class="btn btn-primary btn-sm" asp-controller="Series" asp-action="List" asp-route-id="@item.Id">Series</a> 
+                        <a class="btn btn-primary btn-sm" asp-controller="Games" asp-action="List" asp-route-id="@item.Id">Games</a> 
+                    </span>
+                }
+                
+                @if (loggedInUser.IsFriendsWith(item))
+                {
+                    <a class="btn btn-secondary btn-sm" asp-controller="Account" asp-action="RemoveFriendP" asp-route-id="@item.Id">Remove friend</a>
+                }
+                else
+                {
+                    <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="AddFriendP" asp-route-id="@item.Id">Add friend</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -33,5 +33,34 @@ namespace MyLibrary.Models
             }
             return false;
         }
+
+        public void SetDefaultOverview(int period)
+        {
+            if (period == 0)
+                defaultOverview = 0;
+            
+            else if (period == 1)
+                defaultOverview = 1;
+
+            else if (period == 2)
+                defaultOverview = 2;
+        }
+
+        public void AddFriend(ApplicationUser user)
+        {
+            if(Friends == null)
+            {
+                Friends = new List<ApplicationUser>();
+            }
+            Friends.Add(user);
+        }
+
+        public void RemoveFriend(ApplicationUser user)
+        {
+            if (Friends != null)
+            {
+                Friends.Remove(user);
+            }
+        }
     }
 }

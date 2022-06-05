@@ -37,5 +37,10 @@ namespace MyLibrary.Models
             var totalTime = _context.BookSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.NumberOfPagesRead);
             PagesReadOfBooks = totalTime;
         }
+
+        protected override void SetPeriod()
+        {
+            Period = "two weeks";
+        }
     }
 }

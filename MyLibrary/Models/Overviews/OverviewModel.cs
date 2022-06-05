@@ -5,7 +5,7 @@ namespace MyLibrary.Models
         protected ApplicationDbContext _context;
         protected ApplicationUser _user;
 
-        public string? Period { get; set; }
+        public string? Period { get; protected set; }
         public int TimeSpentOnFilmsInMinutes { get; protected set; }
         public int EpisodesWatchedOfSeries { get; protected set; }
         public int PagesReadOfBooks { get; protected set; }   
@@ -13,6 +13,7 @@ namespace MyLibrary.Models
 
         public void CreateOverview()
         {
+            SetPeriod();
             SetTimeSpentOnFilms();
             SetEpisodesWatchedOfSeries();
             SetPagesReadOfBooks();
@@ -20,6 +21,7 @@ namespace MyLibrary.Models
             CheckNegatives();
         }
 
+        protected abstract void SetPeriod();
         protected abstract void SetTimeSpentOnFilms();
         protected abstract void SetEpisodesWatchedOfSeries();
         protected abstract void SetTimeSpentOnGames();
@@ -47,6 +49,5 @@ namespace MyLibrary.Models
                 TimeSpentOnGamesInMinutes = 0;
             }
         }
-    
     }
 }

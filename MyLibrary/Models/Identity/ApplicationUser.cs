@@ -8,7 +8,6 @@ namespace MyLibrary.Models
         [Range(0,2)]
         public int defaultOverview { get; set; }
         public Boolean listsArePublic { get; set; }
-
         public ICollection<ApplicationUser>? Friends { get; set; }
 
         public ApplicationUser()
@@ -23,15 +22,12 @@ namespace MyLibrary.Models
 
         public bool IsFriendsWith(ApplicationUser user)
         {
-            if (this == user)
-            {
-                return true;
-            }
-            if (Friends != null) 
+            if (this != user && Friends != null)
             {
                 return Friends.Contains(user);
             }
-            return false;
+
+             return true;
         }
 
         public void SetPrivacy(bool set)
@@ -46,11 +42,10 @@ namespace MyLibrary.Models
 
         public void AddFriend(ApplicationUser user)
         {
-            if(Friends == null)
+            if(Friends != null)
             {
-                Friends = new List<ApplicationUser>();
+                Friends.Add(user);
             }
-            Friends.Add(user);
         }
 
         public void RemoveFriend(ApplicationUser user)

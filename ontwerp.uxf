@@ -209,12 +209,14 @@ Of</panel_attributes>
     </coordinates>
     <panel_attributes>/OverviewModel/
 --
++ periodName: string
 + timeSpentOnFilmsInMinutes: int
 + epsidesWatchedOfSeries: int
 + pagesReadOfBooks: int
 + timeSpentOnGamesInMinutes: int
 --
 + CreateOverview(): void/
+/# SetPeriodName(): void/
 /# SetTimeSpentOnFilms(): void/
 /# SetEpisodesWatchedOfSeries(): void/
 /# SetPagesReadOfBooks(): void/

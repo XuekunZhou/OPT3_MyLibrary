@@ -6,40 +6,47 @@ namespace MyLibrary.Models
         protected ApplicationUser _user;
 
         public string? Period { get; set; }
-        public int TimeSpentOnFilmsInMinutes { get; private set; }
-        public int EpisodesWatchedOfSeries { get; private set; }
-        public int PagesReadOfBooks { get; private set; }   
-        public int TimeSpentOnGamesInMinutes { get; private set; }
+        public int TimeSpentOnFilmsInMinutes { get; protected set; }
+        public int EpisodesWatchedOfSeries { get; protected set; }
+        public int PagesReadOfBooks { get; protected set; }   
+        public int TimeSpentOnGamesInMinutes { get; protected set; }
 
-        public abstract void CreateOverview();
-
-        protected void SetTimeSpentOnFilms(int days)
+        public void CreateOverview()
         {
-            var date = DateTime.Now.AddDays(-days);
-            var totalTime = _context.FilmEntries.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Sum(x => x.LengthInMinutes);
-            TimeSpentOnFilmsInMinutes = totalTime;
+            SetTimeSpentOnFilms();
+            SetEpisodesWatchedOfSeries();
+            SetPagesReadOfBooks();
+            SetTimeSpentOnGames();
+            CheckNegatives();
         }
 
-        protected void SetEpisodesWatchedOfSeries(int days)
-        {
-            var date = DateTime.Now.AddDays(-days);
-            var totalEpisodes = _context.SeriesSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.NumberOfEpisodesWatches);
-            EpisodesWatchedOfSeries = totalEpisodes;
-        }
+        protected abstract void SetTimeSpentOnFilms();
+        protected abstract void SetEpisodesWatchedOfSeries();
+        protected abstract void SetTimeSpentOnGames();
+        protected abstract void SetPagesReadOfBooks();
 
-        protected void SetTimeSpentOnGamesIn(int days)
+        protected void CheckNegatives()
         {
-            var date = DateTime.Now.AddDays(-days);
-            var totalTime = _context.GameSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.TimeSpentInMinutes);
-            TimeSpentOnGamesInMinutes = totalTime;
-        }
+            if (TimeSpentOnFilmsInMinutes < 0) 
+            {
+                TimeSpentOnFilmsInMinutes = 0;
+            }
+            
+            if (EpisodesWatchedOfSeries < 0)
+            { 
+                EpisodesWatchedOfSeries = 0;
+            }
 
-        protected void SetPagesReadOfBooks(int days)
-        {
-            var date = DateTime.Now.AddDays(-days);
-            var totalTime = _context.BookSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.NumberOfPagesRead);
-            PagesReadOfBooks = totalTime;
+            if (PagesReadOfBooks < 0) 
+            {
+                PagesReadOfBooks = 0;
+            }
+
+            if (TimeSpentOnGamesInMinutes < 0) 
+            {
+                TimeSpentOnGamesInMinutes = 0;
+            }
         }
-        
+    
     }
 }

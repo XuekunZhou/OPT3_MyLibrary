@@ -89,7 +89,7 @@ namespace MyLibrary.Controllers
         public async Task<IActionResult> SetPrivate()
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-            loggedInUser.listsArePublic = false;
+            loggedInUser.SetPrivacy(false);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Account");
@@ -98,7 +98,7 @@ namespace MyLibrary.Controllers
         public async Task<IActionResult> SetPublic()
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
-            loggedInUser.listsArePublic = true;
+            loggedInUser.SetPrivacy(true);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Account");

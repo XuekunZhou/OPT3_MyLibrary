@@ -29,16 +29,13 @@ namespace MyLibrary.Controllers
 
             if (book != null)
             {
-                var page = new BookSessionModel
-                {
-                    DateOfSession = DateTime.UtcNow,
-                    NumberOfPagesRead = 1,
-                    Entry = book,
-                    User = await _userManager.GetUserAsync(User)
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Book).GetSession();
+                session.Count = 1;
+                session.Entry = book;
+                session.User = await _userManager.GetUserAsync(User);
 
-                _context.Add(page);
-                book.TotalPagesRead ++;;
+                _context.Add(session);
+                book.Count ++;;
                 _context.SaveChanges();
             }
 
@@ -51,23 +48,20 @@ namespace MyLibrary.Controllers
 
             if (book != null)
             {
-                if (book.TotalPagesRead < 1)
+                if (book.Count < 1)
                 {
-                    book.TotalPagesRead = 0;;
+                    book.Count = 0;;
                     _context.SaveChanges();
                     return RedirectToAction("List", "Books");
                 }
 
-                var page = new BookSessionModel
-                {
-                    DateOfSession = DateTime.UtcNow,
-                    NumberOfPagesRead = -1,
-                    Entry = book,
-                    User = await _userManager.GetUserAsync(User)
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Book).GetSession();
+                session.Count = -1;
+                session.Entry = book;
+                session.User = await _userManager.GetUserAsync(User);
 
-                _context.Add(page);
-                book.TotalPagesRead--;
+                _context.Add(session);
+                book.Count--;
                 _context.SaveChanges();
             }
 

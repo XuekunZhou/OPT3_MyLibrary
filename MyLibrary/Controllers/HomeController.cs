@@ -29,19 +29,12 @@ namespace MyLibrary.Controllers
                 
                 switch(loggedInUser.defaultOverview)
                 {
-                    case 1: model = new TwoWeekOverviewModel(_context, loggedInUser); break;
-                    case 2: model = new MonthOverviewModel(_context, loggedInUser); break;
-                    default: model = new WeekOverviewModel(_context, loggedInUser); break;
+                    case 1: model = OverviewFactory.GetTwoWeekOverview(_context, loggedInUser); break;
+                    case 2: model = OverviewFactory.GetMonthOverview(_context, loggedInUser); break;
+                    default: model = OverviewFactory.GetWeekOverview(_context, loggedInUser); break;
                 }
 
-                if (model.TimeSpentOnFilmsInMinutes >= 1320)
-                {
-                    ViewData["Warning"] = "You REALLY should spent less time on this";
-                }
-                else if (model.TimeSpentOnFilmsInMinutes >= 850)
-                {
-                    ViewData["Warning"] = "You should spent less time on this";
-                }
+                ViewData["Warning"] = Warning.GetWarning(OverviewFactory.GetWeekOverview(_context, loggedInUser));
 
                 return View(model);
             }

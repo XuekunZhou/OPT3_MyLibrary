@@ -29,16 +29,13 @@ namespace MyLibrary.Controllers
 
             if (game != null)
             {
-                var episode = new GameSessionModel
-                {
-                    DateOfSession = DateTime.UtcNow,
-                    TimeSpentInMinutes = 30,
-                    Entry = game,
-                    User = await _userManager.GetUserAsync(User)
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Game).GetSession();
+                session.Count = 30;
+                session.Entry = game;
+                session.User = await _userManager.GetUserAsync(User);
 
-                _context.Add(episode);
-                game.TimeSpentInMin += 30;;
+                _context.Add(session);
+                game.Count += 30;;
                 _context.SaveChanges();
             }
 
@@ -52,28 +49,25 @@ namespace MyLibrary.Controllers
 
             if (game != null)
             {
-                if (game.TimeSpentInMin <= 0)
+                if (game.Count <= 0)
                 {
-                    game.TimeSpentInMin = 0;
+                    game.Count = 0;
                     _context.SaveChanges();
                     return RedirectToAction("List", "Games");
                 }
 
-                if (game.TimeSpentInMin < 30)
+                if (game.Count < 30)
                 {
-                    time = game.TimeSpentInMin;
+                    time = game.Count;
                 }
 
-                var episode = new GameSessionModel
-                {
-                    DateOfSession = DateTime.UtcNow,
-                    TimeSpentInMinutes = -time,
-                    Entry = game,
-                    User = await _userManager.GetUserAsync(User)
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Game).GetSession();
+                session.Count = -time;
+                session.Entry = game;
+                session.User = await _userManager.GetUserAsync(User);
 
-                _context.Add(episode);
-                game.TimeSpentInMin -= time;;
+                _context.Add(session);
+                game.Count -= time;;
                 _context.SaveChanges();
             }
 

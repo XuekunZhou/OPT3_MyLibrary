@@ -78,19 +78,17 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TimeSpentInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
+        public async Task<IActionResult> Create([Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
         {
             if (ModelState.IsValid)
             {
                 gameEntryModel.User = await _userManager.GetUserAsync(User);
 
-                var session = new GameSessionModel
-                {
-                    TimeSpentInMinutes = gameEntryModel.TimeSpentInMin,
-                    DateOfSession = DateTime.UtcNow,
-                    Entry = gameEntryModel,
-                    User = gameEntryModel.User
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Game).GetSession();
+                session.Count = gameEntryModel.Count;
+                session.Entry = gameEntryModel;
+                session.User = gameEntryModel.User;
+        
 
                 _context.Add(gameEntryModel);
                 _context.Add(session);
@@ -121,7 +119,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("TimeSpentInMin,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
+        public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
         {
             if (id != gameEntryModel.Id)
             {
@@ -148,16 +146,13 @@ namespace MyLibrary.Controllers
                     }
                 }
 
-                var dif = gameEntryModel.TimeSpentInMin - oldTotal;
+                var dif = gameEntryModel.Count - oldTotal;
                 if(dif != 0)
                 {
-                    var session = new GameSessionModel
-                    {
-                        TimeSpentInMinutes = dif,
-                        DateOfSession = DateTime.UtcNow,
-                        Entry = gameEntryModel,
-                        User = gameEntryModel.User
-                    };
+                    var session = FactoryProducer.GetFactory(EntryTypes.Game).GetSession();
+                    session.Count = dif;
+                    session.Entry = gameEntryModel;
+                    session.User = gameEntryModel.User;
 
                     _context.Add(session);
                     _context.SaveChanges();

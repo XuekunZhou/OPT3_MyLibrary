@@ -145,6 +145,5 @@ namespace MyLibrary.Controllers
             _context.SaveChanges();
             return RedirectToAction("People");
         }
-        
     }
 }

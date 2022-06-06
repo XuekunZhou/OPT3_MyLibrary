@@ -77,19 +77,16 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TotalPagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Create([Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
         {
             if (ModelState.IsValid)
             {
                 bookEntryModel.User = await _userManager.GetUserAsync(User);
-
-                var session = new BookSessionModel
-                {
-                    NumberOfPagesRead = bookEntryModel.TotalPagesRead,
-                    DateOfSession = DateTime.UtcNow,
-                    Entry = bookEntryModel,
-                    User = bookEntryModel.User
-                };
+            
+                var session = FactoryProducer.GetFactory(EntryTypes.Book).GetSession();
+                session.Count = bookEntryModel.Count;
+                session.Entry = bookEntryModel;
+                session.User = bookEntryModel.User;
 
                 _context.Add(bookEntryModel);
                 _context.Add(session);
@@ -120,7 +117,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int oldTotal,[Bind("TotalPagesRead,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
+        public async Task<IActionResult> Edit(int id, int oldTotal,[Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
         {
             if (id != bookEntryModel.Id)
             {
@@ -146,17 +143,14 @@ namespace MyLibrary.Controllers
                         throw;
                     }
                 }
-                var dif = bookEntryModel.TotalPagesRead - oldTotal;
+                var dif = bookEntryModel.Count - oldTotal;
 
                 if(dif != 0)
                 {
-                    var session = new BookSessionModel
-                    {
-                        NumberOfPagesRead = dif,
-                        DateOfSession = DateTime.UtcNow,
-                        Entry = bookEntryModel,
-                        User = bookEntryModel.User
-                    };
+                    var session = FactoryProducer.GetFactory(EntryTypes.Book).GetSession();
+                        session.Count = dif;
+                        session.Entry = bookEntryModel;
+                        session.User = bookEntryModel.User;
 
                     _context.Add(session);
                     _context.SaveChanges();

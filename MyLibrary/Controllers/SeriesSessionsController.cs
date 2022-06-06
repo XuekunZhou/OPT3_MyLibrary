@@ -29,16 +29,13 @@ namespace MyLibrary.Controllers
 
             if (series != null)
             {
-                var episode = new SeriesSessionModel
-                {
-                    DateOfSession = DateTime.UtcNow,
-                    NumberOfEpisodesWatches = 1,
-                    Entry = series,
-                    User = await _userManager.GetUserAsync(User)
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Series).GetSession();                
+                session.Count = 1;
+                session.Entry = series;
+                session.User = await _userManager.GetUserAsync(User);
 
-                _context.Add(episode);
-                series.TotalEpisodesWatched ++;;
+                _context.Add(session);
+                series.Count ++;;
                 _context.SaveChanges();
             }
 
@@ -51,23 +48,20 @@ namespace MyLibrary.Controllers
 
             if (series != null)
             {
-                if (series.TotalEpisodesWatched < 1)
+                if (series.Count < 1)
                 {
-                    series.TotalEpisodesWatched = 0;;
+                    series.Count = 0;;
                     _context.SaveChanges();
                     return RedirectToAction("List", "Series");
                 }
 
-                var episode = new SeriesSessionModel
-                {
-                    DateOfSession = DateTime.UtcNow,
-                    NumberOfEpisodesWatches = -1,
-                    Entry = series,
-                    User = await _userManager.GetUserAsync(User)
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Series).GetSession();                
+                session.Count = -1;
+                session.Entry = series;
+                session.User = await _userManager.GetUserAsync(User);
 
-                _context.Add(episode);
-                series.TotalEpisodesWatched --;
+                _context.Add(session);
+                series.Count--;
                 _context.SaveChanges();
             }
 

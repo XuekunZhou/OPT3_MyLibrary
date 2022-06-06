@@ -12,6 +12,9 @@ namespace MyLibrary.Models
         [Range(0, 10)]
         [Display(Name ="Score")]
         public int ScoreOutOfTen { get; set; }
+        
+        [Range(0, int.MaxValue)]
+        public int Count { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name ="Date of entry")]

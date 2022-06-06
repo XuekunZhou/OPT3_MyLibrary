@@ -78,19 +78,17 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ScoreOutOfTen,TotalEpisodesWatched,DateOfEntry")] SeriesEntryModel seriesEntryModel)
+        public async Task<IActionResult> Create([Bind("Id,Title,ScoreOutOfTen,Count,DateOfEntry")] SeriesEntryModel seriesEntryModel)
         {
             if (ModelState.IsValid)
             {
                 seriesEntryModel.User = await _userManager.GetUserAsync(User);
 
-                var session = new SeriesSessionModel
-                {
-                    NumberOfEpisodesWatches = seriesEntryModel.TotalEpisodesWatched,
-                    DateOfSession = DateTime.UtcNow,
-                    Entry = seriesEntryModel,
-                    User = seriesEntryModel.User
-                };
+                var session = FactoryProducer.GetFactory(EntryTypes.Series).GetSession();                
+                session.Count = seriesEntryModel.Count;
+                session.Entry = seriesEntryModel;
+                session.User = seriesEntryModel.User;
+                
 
                 _context.Add(seriesEntryModel);
                 _context.Add(session);
@@ -121,7 +119,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("Id,Title,ScoreOutOfTen,TotalEpisodesWatched,DateOfEntry")] SeriesEntryModel seriesEntryModel)
+        public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("Id,Title,ScoreOutOfTen,Count,DateOfEntry")] SeriesEntryModel seriesEntryModel)
         {
             if (id != seriesEntryModel.Id)
             {
@@ -148,16 +146,13 @@ namespace MyLibrary.Controllers
                     }
                 }
 
-                var dif = seriesEntryModel.TotalEpisodesWatched - oldTotal;
+                var dif = seriesEntryModel.Count - oldTotal;
                 if(dif != 0)
                 {
-                    var session = new SeriesSessionModel
-                    {
-                        NumberOfEpisodesWatches = dif,
-                        DateOfSession = DateTime.UtcNow,
-                        Entry = seriesEntryModel,
-                        User = seriesEntryModel.User
-                    };
+                    var session = FactoryProducer.GetFactory(EntryTypes.Series).GetSession();                
+                    session.Count = dif;
+                    session.Entry = seriesEntryModel;
+                    session.User = seriesEntryModel.User;
 
                     _context.Add(session);
                     _context.SaveChanges();

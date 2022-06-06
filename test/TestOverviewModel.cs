@@ -50,9 +50,9 @@ namespace test
         {
             // Given
             Setup();
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "b", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "c", LengthInMinutes = 639, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "b", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "c", Count = 639, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
             
             // When
@@ -68,9 +68,9 @@ namespace test
         {
             // Given
             Setup();
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "b", LengthInMinutes = 200, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "c", LengthInMinutes = 540, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "b", Count = 200, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "c", Count = 540, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
             
             // When
@@ -86,10 +86,10 @@ namespace test
         {
             // Given
             Setup();
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "b", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "c", LengthInMinutes = 659, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "d", LengthInMinutes = 400, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "b", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "c", Count = 659, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "d", Count = 400, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
             
             // When
@@ -105,10 +105,10 @@ namespace test
         {
             // Given
             Setup();
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "b", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "c", LengthInMinutes = 660, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "d", LengthInMinutes = 400, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "b", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "c", Count = 660, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "d", Count = 400, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
             
             // When
@@ -124,7 +124,7 @@ namespace test
         {
             // Given
             Setup();
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 1000000, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 1000000, DateOfEntry = DateTime.Now, User = alice});
             
             context.SaveChanges();
             
@@ -141,9 +141,9 @@ namespace test
         {
             // Given
             Setup();
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "b", LengthInMinutes = 100, DateOfEntry = DateTime.Now, User = alice});
-            context.Add(new FilmEntryModel{Title = "c", LengthInMinutes = 100, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "b", Count = 100, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "c", Count = 100, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
             
             context.SaveChanges();
             

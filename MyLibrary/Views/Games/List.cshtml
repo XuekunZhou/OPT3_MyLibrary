@@ -15,7 +15,7 @@
                 @Html.DisplayNameFor(model => model.ScoreOutOfTen)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TimeSpentInMin)
+               Minutes
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DateOfEntry)
@@ -34,7 +34,7 @@
             </td>
             <td>
                 <a class="btn btn-secondary btn-sm" asp-controller="GameSessions" asp-action="RemoveSession" asp-route-id="@item.Id">-</a>
-                @Html.DisplayFor(modelItem => item.TimeSpentInMin)
+                @Html.DisplayFor(modelItem => item.Count)
                 <a class="btn btn-secondary btn-sm" asp-controller="GameSessions" asp-action="AddSession" asp-route-id="@item.Id">+</a>
             </td>
             <td>

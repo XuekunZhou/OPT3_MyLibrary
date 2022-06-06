@@ -62,7 +62,7 @@ namespace test
             Setup();
             var mgr = GetMockUserManager(alice);
             var sut = new HomeController(context, mgr.Object);
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 120, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 120, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
 
             // When
@@ -81,7 +81,7 @@ namespace test
             Setup();
             var mgr = GetMockUserManager(null);
             var sut = new HomeController(context, mgr.Object);
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 120, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 120, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
             context.SaveChanges();
 
             // When
@@ -100,7 +100,7 @@ namespace test
             Setup();
             var mgr = GetMockUserManager(null);
             var sut = new HomeController(context, mgr.Object);
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 850, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 850, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
 
             // When
@@ -119,7 +119,7 @@ namespace test
             Setup();
             var mgr = GetMockUserManager(alice);
             var sut = new HomeController(context, mgr.Object);
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 850, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 850, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
             context.SaveChanges();
 
             // When
@@ -138,7 +138,7 @@ namespace test
             Setup();
             var mgr = GetMockUserManager(alice);
             var sut = new HomeController(context, mgr.Object);
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 1320, DateOfEntry = DateTime.Now, User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 1320, DateOfEntry = DateTime.Now, User = alice});
             context.SaveChanges();
 
             // When
@@ -157,7 +157,7 @@ namespace test
             Setup();
             var mgr = GetMockUserManager(null);
             var sut = new HomeController(context, mgr.Object);
-            context.Add(new FilmEntryModel{Title = "a", LengthInMinutes = 1320, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
+            context.Add(new FilmEntryModel{Title = "a", Count = 1320, DateOfEntry = DateTime.Now.AddDays(-8), User = alice});
             context.SaveChanges();
 
             // When

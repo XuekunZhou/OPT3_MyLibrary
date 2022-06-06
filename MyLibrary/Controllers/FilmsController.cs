@@ -84,7 +84,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LengthInMinutes,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
+        public async Task<IActionResult> Create([Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
         {
             if (ModelState.IsValid)
             {
@@ -117,7 +117,7 @@ namespace MyLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LengthInMinutes,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
         {
             if (id != filmEntryModel.Id)
             {

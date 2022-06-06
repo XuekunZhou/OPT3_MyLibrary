@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyLibrary.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class CleanStart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,7 @@ namespace MyLibrary.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    defaultOverview = table.Column<int>(type: "INTEGER", nullable: false),
                     listsArePublic = table.Column<bool>(type: "INTEGER", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -162,51 +163,30 @@ namespace MyLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookEntries",
+                name: "EntryModel",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PagesRead = table.Column<int>(type: "INTEGER", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     ScoreOutOfTen = table.Column<int>(type: "INTEGER", nullable: false),
+                    Count = table.Column<int>(type: "INTEGER", nullable: false),
                     DateOfEntry = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    Discriminator = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BookEntries", x => x.Id);
+                    table.PrimaryKey("PK_EntryModel", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookEntries_AspNetUsers_UserId",
+                        name: "FK_EntryModel_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "FilmEntries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    LengthInMinutes = table.Column<int>(type: "INTEGER", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    ScoreOutOfTen = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateOfEntry = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FilmEntries", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FilmEntries_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Friends",
+                name: "Friendships",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -216,87 +196,106 @@ namespace MyLibrary.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friends", x => x.Id);
+                    table.PrimaryKey("PK_Friendships", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Friends_AspNetUsers_UserOneId",
+                        name: "FK_Friendships_AspNetUsers_UserOneId",
                         column: x => x.UserOneId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Friends_AspNetUsers_UserTwoId",
+                        name: "FK_Friendships_AspNetUsers_UserTwoId",
                         column: x => x.UserTwoId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameEntries",
+                name: "BookSessions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TimeSpentInMin = table.Column<int>(type: "INTEGER", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    ScoreOutOfTen = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateOfEntry = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    BookEntryModelId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Count = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateOfSession = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EntryId = table.Column<int>(type: "INTEGER", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameEntries", x => x.Id);
+                    table.PrimaryKey("PK_BookSessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GameEntries_AspNetUsers_UserId",
+                        name: "FK_BookSessions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BookSessions_EntryModel_BookEntryModelId",
+                        column: x => x.BookEntryModelId,
+                        principalTable: "EntryModel",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BookSessions_EntryModel_EntryId",
+                        column: x => x.EntryId,
+                        principalTable: "EntryModel",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "SeriesEntries",
+                name: "GameSessions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    ScoreOutOfTen = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateOfEntry = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Count = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateOfSession = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EntryId = table.Column<int>(type: "INTEGER", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SeriesEntries", x => x.Id);
+                    table.PrimaryKey("PK_GameSessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SeriesEntries_AspNetUsers_UserId",
+                        name: "FK_GameSessions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_GameSessions_EntryModel_EntryId",
+                        column: x => x.EntryId,
+                        principalTable: "EntryModel",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "EpisodeEntries",
+                name: "SeriesSessions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    LengthInMin = table.Column<int>(type: "INTEGER", nullable: false),
-                    SeriesId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    ScoreOutOfTen = table.Column<int>(type: "INTEGER", nullable: false),
-                    DateOfEntry = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    SeriesEntryModelId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Count = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateOfSession = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EntryId = table.Column<int>(type: "INTEGER", nullable: true),
                     UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EpisodeEntries", x => x.Id);
+                    table.PrimaryKey("PK_SeriesSessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_EpisodeEntries_AspNetUsers_UserId",
+                        name: "FK_SeriesSessions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_EpisodeEntries_SeriesEntries_SeriesId",
-                        column: x => x.SeriesId,
-                        principalTable: "SeriesEntries",
+                        name: "FK_SeriesSessions_EntryModel_EntryId",
+                        column: x => x.EntryId,
+                        principalTable: "EntryModel",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SeriesSessions_EntryModel_SeriesEntryModelId",
+                        column: x => x.SeriesEntryModelId,
+                        principalTable: "EntryModel",
                         principalColumn: "Id");
                 });
 
@@ -343,43 +342,58 @@ namespace MyLibrary.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BookEntries_UserId",
-                table: "BookEntries",
+                name: "IX_BookSessions_BookEntryModelId",
+                table: "BookSessions",
+                column: "BookEntryModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookSessions_EntryId",
+                table: "BookSessions",
+                column: "EntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookSessions_UserId",
+                table: "BookSessions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EpisodeEntries_SeriesId",
-                table: "EpisodeEntries",
-                column: "SeriesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EpisodeEntries_UserId",
-                table: "EpisodeEntries",
+                name: "IX_EntryModel_UserId",
+                table: "EntryModel",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilmEntries_UserId",
-                table: "FilmEntries",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Friends_UserOneId",
-                table: "Friends",
+                name: "IX_Friendships_UserOneId",
+                table: "Friendships",
                 column: "UserOneId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friends_UserTwoId",
-                table: "Friends",
+                name: "IX_Friendships_UserTwoId",
+                table: "Friendships",
                 column: "UserTwoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameEntries_UserId",
-                table: "GameEntries",
+                name: "IX_GameSessions_EntryId",
+                table: "GameSessions",
+                column: "EntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameSessions_UserId",
+                table: "GameSessions",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SeriesEntries_UserId",
-                table: "SeriesEntries",
+                name: "IX_SeriesSessions_EntryId",
+                table: "SeriesSessions",
+                column: "EntryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeriesSessions_SeriesEntryModelId",
+                table: "SeriesSessions",
+                column: "SeriesEntryModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SeriesSessions_UserId",
+                table: "SeriesSessions",
                 column: "UserId");
         }
 
@@ -401,25 +415,22 @@ namespace MyLibrary.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BookEntries");
+                name: "BookSessions");
 
             migrationBuilder.DropTable(
-                name: "EpisodeEntries");
+                name: "Friendships");
 
             migrationBuilder.DropTable(
-                name: "FilmEntries");
+                name: "GameSessions");
 
             migrationBuilder.DropTable(
-                name: "Friends");
-
-            migrationBuilder.DropTable(
-                name: "GameEntries");
+                name: "SeriesSessions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "SeriesEntries");
+                name: "EntryModel");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

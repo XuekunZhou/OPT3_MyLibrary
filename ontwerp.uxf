@@ -422,11 +422,11 @@ uses</panel_attributes>
     <coordinates>
       <x>1899</x>
       <y>459</y>
-      <w>81</w>
+      <w>45</w>
       <h>162</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-showsOnline</panel_attributes>
+uses</panel_attributes>
     <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
   </element>
   <element>
@@ -958,7 +958,7 @@ uses</panel_attributes>
       <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-Uses</panel_attributes>
+uses</panel_attributes>
     <additional_attributes>140.0;20.0;10.0;20.0</additional_attributes>
   </element>
 </diagram>

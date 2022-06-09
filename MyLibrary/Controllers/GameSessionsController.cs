@@ -35,7 +35,7 @@ namespace MyLibrary.Controllers
                 session.User = await _userManager.GetUserAsync(User);
 
                 _context.Add(session);
-                game.Count += 30;;
+                game.Count += 30;
                 _context.SaveChanges();
             }
 
@@ -49,7 +49,7 @@ namespace MyLibrary.Controllers
 
             if (game != null)
             {
-                if (game.Count <= 0)
+                if (game.Count < 0)
                 {
                     game.Count = 0;
                     _context.SaveChanges();
@@ -67,7 +67,7 @@ namespace MyLibrary.Controllers
                 session.User = await _userManager.GetUserAsync(User);
 
                 _context.Add(session);
-                game.Count -= time;;
+                game.Count -= time;
                 _context.SaveChanges();
             }
 

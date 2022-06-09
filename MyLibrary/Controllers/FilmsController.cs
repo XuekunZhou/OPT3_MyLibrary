@@ -58,17 +58,11 @@ namespace MyLibrary.Controllers
         // GET: Film/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.FilmEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.FilmEntries == null) return NotFound();
 
             var filmEntryModel = await _context.FilmEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (filmEntryModel == null)
-            {
-                return NotFound();
-            }
+            if (filmEntryModel == null) return NotFound();
 
             return View(filmEntryModel);
         }
@@ -99,16 +93,11 @@ namespace MyLibrary.Controllers
         // GET: Film/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.FilmEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.FilmEntries == null) return NotFound();
 
             var filmEntryModel = await _context.FilmEntries.FindAsync(id);
-            if (filmEntryModel == null)
-            {
-                return NotFound();
-            }
+            if (filmEntryModel == null) return NotFound();
+
             return View(filmEntryModel);
         }
 
@@ -119,10 +108,7 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] FilmEntryModel filmEntryModel)
         {
-            if (id != filmEntryModel.Id)
-            {
-                return NotFound();
-            }
+            if (id != filmEntryModel.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -133,14 +119,8 @@ namespace MyLibrary.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmEntryModelExists(filmEntryModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!FilmEntryModelExists(filmEntryModel.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction("List");
             }
@@ -150,17 +130,10 @@ namespace MyLibrary.Controllers
         // GET: Film/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.FilmEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.FilmEntries == null) return NotFound();
 
-            var filmEntryModel = await _context.FilmEntries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (filmEntryModel == null)
-            {
-                return NotFound();
-            }
+            var filmEntryModel = await _context.FilmEntries.FirstOrDefaultAsync(m => m.Id == id);
+            if (filmEntryModel == null) return NotFound();
 
             return View(filmEntryModel);
         }
@@ -170,10 +143,8 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.FilmEntries == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.FilmEntries'  is null.");
-            }
+            if (_context.FilmEntries == null) return Problem("Entity set 'ApplicationDbContext.FilmEntries'  is null.");
+
             var filmEntryModel = await _context.FilmEntries.FindAsync(id);
             if (filmEntryModel != null)
             {

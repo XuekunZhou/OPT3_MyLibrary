@@ -35,7 +35,7 @@ namespace MyLibrary.Controllers
                 session.User = await _userManager.GetUserAsync(User);
 
                 _context.Add(session);
-                series.Count ++;;
+                series.Count ++;
                 _context.SaveChanges();
             }
 
@@ -50,7 +50,7 @@ namespace MyLibrary.Controllers
             {
                 if (series.Count < 1)
                 {
-                    series.Count = 0;;
+                    series.Count = 0;
                     _context.SaveChanges();
                     return RedirectToAction("List", "Series");
                 }

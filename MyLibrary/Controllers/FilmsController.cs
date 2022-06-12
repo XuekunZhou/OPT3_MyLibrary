@@ -60,8 +60,7 @@ namespace MyLibrary.Controllers
         {
             if (id == null || _context.FilmEntries == null) return NotFound();
 
-            var filmEntryModel = await _context.FilmEntries
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var filmEntryModel = await _context.FilmEntries.FirstOrDefaultAsync(m => m.Id == id);
             if (filmEntryModel == null) return NotFound();
 
             return View(filmEntryModel);

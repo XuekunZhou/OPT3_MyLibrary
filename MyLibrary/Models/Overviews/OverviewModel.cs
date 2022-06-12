@@ -20,7 +20,6 @@ namespace MyLibrary.Models
             SetEpisodesWatchedOfSeries();
             SetPagesReadOfBooks();
             SetTimeSpentOnGames();
-            CheckNegatives();
         }
 
         protected abstract void SetPeriodString();
@@ -48,14 +47,6 @@ namespace MyLibrary.Models
             var date = DateTime.UtcNow.AddDays(PeriodDays);
             var totalTime = _context.BookSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
             PagesReadOfBooks = totalTime;
-        }
-
-        protected void CheckNegatives()
-        {
-            if (TimeSpentOnFilmsInMinutes < 0) TimeSpentOnFilmsInMinutes = 0;
-            if (EpisodesWatchedOfSeries < 0) EpisodesWatchedOfSeries = 0;
-            if (PagesReadOfBooks < 0) PagesReadOfBooks = 0;
-            if (TimeSpentOnGamesInMinutes < 0) TimeSpentOnGamesInMinutes = 0;
         }
     }
 }

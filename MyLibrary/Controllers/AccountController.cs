@@ -38,7 +38,6 @@ namespace MyLibrary.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser(model.Email, model.Username);
-
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -69,10 +68,7 @@ namespace MyLibrary.Controllers
                 {
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
 
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                    if (result.Succeeded) return RedirectToAction("Index", "Home");
                 }
             }
             ViewData["LoginError"] = "Incorrect email or password";

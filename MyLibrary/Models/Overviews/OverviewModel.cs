@@ -5,7 +5,8 @@ namespace MyLibrary.Models
         protected ApplicationDbContext _context;
         protected ApplicationUser _user;
 
-        public string? Period { get; protected set; }
+        public string? PeriodString { get; protected set; }
+        public int PeriodDays { get; protected set; }
         public int TimeSpentOnFilmsInMinutes { get; protected set; }
         public int EpisodesWatchedOfSeries { get; protected set; }
         public int PagesReadOfBooks { get; protected set; }   
@@ -13,41 +14,39 @@ namespace MyLibrary.Models
 
         public void CreateOverview()
         {
-            SetPeriod();
+            SetPeriodString();
+            SetPeriodDays();
             SetTimeSpentOnFilms();
             SetEpisodesWatchedOfSeries();
             SetPagesReadOfBooks();
             SetTimeSpentOnGames();
-            CheckNegatives();
         }
 
-        protected abstract void SetPeriod();
-        protected abstract void SetTimeSpentOnFilms();
-        protected abstract void SetEpisodesWatchedOfSeries();
-        protected abstract void SetTimeSpentOnGames();
-        protected abstract void SetPagesReadOfBooks();
-
-        protected void CheckNegatives()
+        protected abstract void SetPeriodString();
+        protected abstract void SetPeriodDays();
+        protected void SetTimeSpentOnFilms()
         {
-            if (TimeSpentOnFilmsInMinutes < 0) 
-            {
-                TimeSpentOnFilmsInMinutes = 0;
-            }
-            
-            if (EpisodesWatchedOfSeries < 0)
-            { 
-                EpisodesWatchedOfSeries = 0;
-            }
-
-            if (PagesReadOfBooks < 0) 
-            {
-                PagesReadOfBooks = 0;
-            }
-
-            if (TimeSpentOnGamesInMinutes < 0) 
-            {
-                TimeSpentOnGamesInMinutes = 0;
-            }
+            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var totalTime = _context.FilmEntries.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Sum(x => x.Count);
+            TimeSpentOnFilmsInMinutes = totalTime;
+        }
+        protected void SetEpisodesWatchedOfSeries()
+        {
+            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var totalEpisodes = _context.SeriesSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
+            EpisodesWatchedOfSeries = totalEpisodes;
+        }
+        protected void SetTimeSpentOnGames()
+        {
+            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var totalTime = _context.GameSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
+            TimeSpentOnGamesInMinutes = totalTime;
+        }
+        protected void SetPagesReadOfBooks()
+        {
+            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var totalTime = _context.BookSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
+            PagesReadOfBooks = totalTime;
         }
     }
 }

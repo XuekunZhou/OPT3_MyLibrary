@@ -33,10 +33,7 @@ namespace MyLibrary.Controllers
                 watchedUser = loggedInUser;
             }
 
-            if (watchedUser == null) 
-            {
-                return RedirectToAction("NotFound", "Error");
-            }
+            if (watchedUser == null) return RedirectToAction("NotFound", "Error");
 
             if (watchedUser.listsArePublic || loggedInUser.IsFriendsWith(watchedUser))
             {
@@ -51,17 +48,11 @@ namespace MyLibrary.Controllers
         // GET: Book/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.BookEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.BookEntries == null) return NotFound();
 
             var bookEntryModel = await _context.BookEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookEntryModel == null)
-            {
-                return NotFound();
-            }
+            if (bookEntryModel == null) return NotFound();
 
             return View(bookEntryModel);
         }
@@ -99,16 +90,11 @@ namespace MyLibrary.Controllers
         // GET: Book/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.BookEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.BookEntries == null) return NotFound();
 
             var bookEntryModel = await _context.BookEntries.FindAsync(id);
-            if (bookEntryModel == null)
-            {
-                return NotFound();
-            }
+            if (bookEntryModel == null) return NotFound();
+
             return View(bookEntryModel);
         }
 
@@ -119,10 +105,7 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, int oldTotal,[Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] BookEntryModel bookEntryModel)
         {
-            if (id != bookEntryModel.Id)
-            {
-                return NotFound();
-            }
+            if (id != bookEntryModel.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -134,14 +117,9 @@ namespace MyLibrary.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookEntryModelExists(bookEntryModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!BookEntryModelExists(bookEntryModel.Id)) return NotFound();
+                    else throw;
+            
                 }
                 var dif = bookEntryModel.Count - oldTotal;
 
@@ -163,17 +141,11 @@ namespace MyLibrary.Controllers
         // GET: Book/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.BookEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.BookEntries == null) return NotFound();
 
             var bookEntryModel = await _context.BookEntries
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (bookEntryModel == null)
-            {
-                return NotFound();
-            }
+            if (bookEntryModel == null) return NotFound();
 
             return View(bookEntryModel);
         }
@@ -183,10 +155,8 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.BookEntries == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.BookEntries'  is null.");
-            }
+            if (_context.BookEntries == null) return Problem("Entity set 'ApplicationDbContext.BookEntries'  is null.");
+ 
             var bookEntryModel = await _context.BookEntries.FindAsync(id);
             if (bookEntryModel != null)
             {

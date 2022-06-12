@@ -121,10 +121,7 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("Count,Id,Title,ScoreOutOfTen,DateOfEntry")] GameEntryModel gameEntryModel)
         {
-            if (id != gameEntryModel.Id)
-            {
-                return NotFound();
-            }
+            if (id != gameEntryModel.Id) return NotFound();
 
             if (ModelState.IsValid)
             {   
@@ -136,14 +133,8 @@ namespace MyLibrary.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GameEntryModelExists(gameEntryModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!GameEntryModelExists(gameEntryModel.Id)) return NotFound();
+                    else throw;
                 }
 
                 var dif = gameEntryModel.Count - oldTotal;
@@ -166,17 +157,10 @@ namespace MyLibrary.Controllers
         // GET: Games/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.GameEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.GameEntries == null) return NotFound();
 
-            var gameEntryModel = await _context.GameEntries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (gameEntryModel == null)
-            {
-                return NotFound();
-            }
+            var gameEntryModel = await _context.GameEntries.FirstOrDefaultAsync(m => m.Id == id);
+            if (gameEntryModel == null) return NotFound();
 
             return View(gameEntryModel);
         }
@@ -186,10 +170,8 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.GameEntries == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.GameEntries'  is null.");
-            }
+            if (_context.GameEntries == null) return Problem("Entity set 'ApplicationDbContext.GameEntries'  is null.");
+
             var gameEntryModel = await _context.GameEntries.FindAsync(id);
             if (gameEntryModel != null)
             {

@@ -121,10 +121,7 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, int oldTotal, [Bind("Id,Title,ScoreOutOfTen,Count,DateOfEntry")] SeriesEntryModel seriesEntryModel)
         {
-            if (id != seriesEntryModel.Id)
-            {
-                return NotFound();
-            }
+            if (id != seriesEntryModel.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -136,14 +133,8 @@ namespace MyLibrary.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SeriesEntryModelExists(seriesEntryModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!SeriesEntryModelExists(seriesEntryModel.Id)) return NotFound();
+                    else throw;
                 }
 
                 var dif = seriesEntryModel.Count - oldTotal;
@@ -166,18 +157,10 @@ namespace MyLibrary.Controllers
         // GET: Series/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.SeriesEntries == null)
-            {
-                return NotFound();
-            }
+            if (id == null || _context.SeriesEntries == null) return NotFound();
 
-            var seriesEntryModel = await _context.SeriesEntries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (seriesEntryModel == null)
-            {
-                return NotFound();
-            }
-
+            var seriesEntryModel = await _context.SeriesEntries.FirstOrDefaultAsync(m => m.Id == id);
+            if (seriesEntryModel == null) return NotFound();
             return View(seriesEntryModel);
         }
 
@@ -186,10 +169,8 @@ namespace MyLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.SeriesEntries == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.SeriesEntries'  is null.");
-            }
+            if (_context.SeriesEntries == null) return Problem("Entity set 'ApplicationDbContext.SeriesEntries'  is null.");
+    
             var seriesEntryModel = await _context.SeriesEntries.FindAsync(id);
             if (seriesEntryModel != null)
             {

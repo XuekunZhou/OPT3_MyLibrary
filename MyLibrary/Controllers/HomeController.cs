@@ -26,7 +26,6 @@ namespace MyLibrary.Controllers
 
             if (loggedInUser != null)
             {
-                
                 switch(loggedInUser.defaultOverview)
                 {
                     case 1: model = OverviewFactory.GetTwoWeekOverview(_context, loggedInUser); break;
@@ -35,7 +34,6 @@ namespace MyLibrary.Controllers
                 }
 
                 ViewData["Warning"] = Warning.GetWarning(OverviewFactory.GetWeekOverview(_context, loggedInUser));
-
                 return View(model);
             }
 

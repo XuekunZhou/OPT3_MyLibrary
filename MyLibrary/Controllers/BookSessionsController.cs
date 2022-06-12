@@ -35,7 +35,7 @@ namespace MyLibrary.Controllers
                 session.User = await _userManager.GetUserAsync(User);
 
                 _context.Add(session);
-                book.Count ++;;
+                book.Count ++;
                 _context.SaveChanges();
             }
 

@@ -26,25 +26,25 @@ namespace MyLibrary.Models
         protected abstract void SetPeriodDays();
         protected void SetTimeSpentOnFilms()
         {
-            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var date = DateTime.UtcNow.AddDays(-PeriodDays);
             var totalTime = _context.FilmEntries.Where(u => u.User == _user).Where(f => f.DateOfEntry >= date).Sum(x => x.Count);
             TimeSpentOnFilmsInMinutes = totalTime;
         }
         protected void SetEpisodesWatchedOfSeries()
         {
-            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var date = DateTime.UtcNow.AddDays(-PeriodDays);
             var totalEpisodes = _context.SeriesSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
             EpisodesWatchedOfSeries = totalEpisodes;
         }
         protected void SetTimeSpentOnGames()
         {
-            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var date = DateTime.UtcNow.AddDays(-PeriodDays);
             var totalTime = _context.GameSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
             TimeSpentOnGamesInMinutes = totalTime;
         }
         protected void SetPagesReadOfBooks()
         {
-            var date = DateTime.UtcNow.AddDays(PeriodDays);
+            var date = DateTime.UtcNow.AddDays(-PeriodDays);
             var totalTime = _context.BookSessions.Where(u => u.User == _user).Where(f => f.DateOfSession >= date).Sum(x => x.Count);
             PagesReadOfBooks = totalTime;
         }
